@@ -248,17 +248,6 @@ namespace ChessWpf.Models
             board[4, WHITE_ROW] = new King(Player.White);
             board[4, BLACK_ROW] = new King(Player.Black);
 
-            /*
-            // Add the Piece to the list of each piece type
-            for (int i = 0; i < BOARD_SIZE; i++)
-            {
-                whitePiece.Add(board[i, WHITE_ROW]);
-                whitePiece.Add(board[i, WHITE_ROW + 1]);
-                blackPiece.Add(board[i, WHITE_ROW]);
-                blackPiece.Add(board[i, BLACK_ROW - 1]);
-            }
-            */
-
 
             // Initialize the empty places
             for (int col = 0; col < BOARD_SIZE; col++)
@@ -275,12 +264,6 @@ namespace ChessWpf.Models
             movesSincePawnMovedOrPieceCaptured = 0;
         }
 
-        // Getters
-        
-        
-
-
-        // Setters
         public void MakeMove(Move move)
         {
             Piece piece = GetPiece(move.FromCol, move.FromRow);
@@ -351,7 +334,6 @@ namespace ChessWpf.Models
             }
         }
 
-
         public Status UpdateStatus()
         {
             if (IsStalemate())
@@ -419,8 +401,6 @@ namespace ChessWpf.Models
             int kingCol = -1;
             int kingRow = -1;
 
-            // Get the opponent
-            Player opponent = Opponent;
 
             // Locate the king
             for (int col = 0; col < BOARD_SIZE; col++)

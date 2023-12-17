@@ -9,10 +9,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media.Media3D;
-using Models.Pieces.ChessWpf;
+using ChessWpf.Models.Pieces;
 
 
-namespace ChessWpf
+namespace ChessWpf.Models
 {
     public enum PieceType 
     {

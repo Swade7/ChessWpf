@@ -68,7 +68,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Models\Pieces\Bishop.cs" />
-    <Compile Include="Chess.cs" />
+    <Compile Include="Models\Chess.cs" />
     <Compile Include="Models\Pieces\Empty.cs" />
     <Compile Include="Models\Pieces\King.cs" />
     <Compile Include="Models\Pieces\Knight.cs" />

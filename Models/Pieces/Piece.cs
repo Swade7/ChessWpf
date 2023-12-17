@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 namespace ChessWpf.Models.Pieces
 { 
 
-    public abstract class Pieces
+    public abstract class Piece
     {
         private PieceType pieceType;
         private Player player;
         // Constructor
-        public Pieces(PieceType pieceType, Player player)
+        public Piece(PieceType pieceType, Player player)
         {
             PieceType = pieceType;
             Player = player;
@@ -54,11 +54,11 @@ namespace ChessWpf.Models.Pieces
             // Implement your logic here
         }
 
-        public abstract bool CheckValidMove(Move move, Pieces[,] board, Player currentPlayer, Move? lastMove);
+        public abstract bool CheckValidMove(Move move, Piece[,] board, Player currentPlayer, Move? lastMove);
         public abstract void UpdatePiece();
 
         // Copy method
-        public abstract Pieces Clone();
+        public abstract Piece Clone();
 
     }
 }

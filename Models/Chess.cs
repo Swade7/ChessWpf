@@ -67,9 +67,9 @@ namespace ChessWpf.Models
         int movesSincePawnMovedOrPieceCaptured;
         bool hasWhiteCastled;
         bool hasBlackCastled;
-        Pieces[,] board;
-        List<Pieces> whitePieces;
-        List<Pieces> blackPieces;
+        Piece[,] board;
+        List<Piece> whitePiece;
+        List<Piece> blackPiece;
 
         // Properties
         public Player CurrentPlayer
@@ -98,7 +98,7 @@ namespace ChessWpf.Models
             }
 
         }
-        public Pieces[,] Board
+        public Piece[,] Board
         {
             get
             {
@@ -126,25 +126,25 @@ namespace ChessWpf.Models
             {
                 // Create a list to store the possible moves
                 List<Move> moves = new List<Move>();
-                // Get pieces that belong to the current player
-                List<Pieces> pieces = new List<Pieces>();
+                // Get Piece that belong to the current player
+                List<Piece> Piece = new List<Piece>();
                 if (CurrentPlayer == Player.White)
                 {
-                    pieces = WhitePieces;
+                    Piece = WhitePiece;
                 }
                 else if (CurrentPlayer == Player.Black)
                 {
-                    pieces = BlackPieces;
+                    Piece = BlackPiece;
                 }
 
-                // Iterate over the board to find the pieces that belong to the currentPlayer
+                // Iterate over the board to find the Piece that belong to the currentPlayer
                 for (int col = 0; col < BOARD_SIZE; col++)
                 {
                     for (int row = 0; row < BOARD_SIZE; row++)
                     {
                         if (board[col, row].Player == CurrentPlayer)
                         {
-                            Pieces currentPiece = GetPiece(col, row);
+                            Piece currentPiece = GetPiece(col, row);
                             // Check each possible "to" location
                             for (int toCol = 0; toCol < BOARD_SIZE; toCol++)
                             {
@@ -179,17 +179,17 @@ namespace ChessWpf.Models
             }
         }
 
-        public List<Pieces> BlackPieces {
+        public List<Piece> BlackPiece {
             get
             {
-                return blackPieces;
+                return blackPiece;
             }
         }
-        public List<Pieces> WhitePieces 
+        public List<Piece> WhitePiece 
         {
             get
             {
-                return whitePieces;
+                return whitePiece;
             }
         }
 
@@ -208,8 +208,8 @@ namespace ChessWpf.Models
             moves = rhs.moves;
             movesSincePawnMovedOrPieceCaptured = rhs.movesSincePawnMovedOrPieceCaptured;
             board = rhs.board;
-            whitePieces = rhs.whitePieces;
-            blackPieces = rhs.blackPieces;
+            whitePiece = rhs.whitePiece;
+            blackPiece = rhs.blackPiece;
         }
 
         
@@ -249,13 +249,13 @@ namespace ChessWpf.Models
             board[4, BLACK_ROW] = new King(Player.Black);
 
             /*
-            // Add the pieces to the list of each piece type
+            // Add the Piece to the list of each piece type
             for (int i = 0; i < BOARD_SIZE; i++)
             {
-                whitePieces.Add(board[i, WHITE_ROW]);
-                whitePieces.Add(board[i, WHITE_ROW + 1]);
-                blackPieces.Add(board[i, WHITE_ROW]);
-                blackPieces.Add(board[i, BLACK_ROW - 1]);
+                whitePiece.Add(board[i, WHITE_ROW]);
+                whitePiece.Add(board[i, WHITE_ROW + 1]);
+                blackPiece.Add(board[i, WHITE_ROW]);
+                blackPiece.Add(board[i, BLACK_ROW - 1]);
             }
             */
 
@@ -283,7 +283,7 @@ namespace ChessWpf.Models
         // Setters
         public void MakeMove(Move move)
         {
-            Pieces piece = GetPiece(move.FromCol, move.FromRow);
+            Piece piece = GetPiece(move.FromCol, move.FromRow);
             PieceType pieceType = piece.PieceType;
 
             if (piece.CheckValidMove(move, board, currentPlayer, GetLastMove()))
@@ -293,7 +293,7 @@ namespace ChessWpf.Models
                     if (pieceType == PieceType.King && Math.Abs(move.FromCol - move.ToCol) == 2)
                     {
                         // Check if the King would move through check
-                        Pieces[,] tempBoard = (Pieces[,])board.Clone();
+                        Piece[,] tempBoard = (Piece[,])board.Clone();
                         for (int i = Math.Min(move.FromCol, move.ToCol) + 1; i < Math.Max(move.FromCol, move.ToCol); i++)
                         {
                             tempBoard[i, move.FromRow] = new King(currentPlayer);
@@ -334,7 +334,7 @@ namespace ChessWpf.Models
             }
         }
 
-        private Pieces GetPiece(int col, int row)
+        private Piece GetPiece(int col, int row)
         {
             return board[col, row];
         }
@@ -387,7 +387,7 @@ namespace ChessWpf.Models
                     for (int row = 0; row < BOARD_SIZE; row++)
                     {
                         // Get the piece at the location
-                        Pieces piece = GetPiece(col, row);
+                        Piece piece = GetPiece(col, row);
                         if (piece.PieceType == PieceType.King && piece.Player == CurrentPlayer)
                         {
                             kingCol = col;
@@ -428,7 +428,7 @@ namespace ChessWpf.Models
                 for (int row = 0; row < BOARD_SIZE; row++)
                 {
                     // Get the piece at the location
-                    Pieces piece = GetPiece(col, row);
+                    Piece piece = GetPiece(col, row);
                     if (piece.PieceType == PieceType.King && piece.Player == currentPlayer)
                     {
                         kingCol = col;
@@ -467,7 +467,7 @@ namespace ChessWpf.Models
             // Create a copy of the game to test a move
             Chess chessCopy = new Chess(this);
 
-            Pieces piece = chessCopy.GetPiece(move.FromCol, move.FromRow);
+            Piece piece = chessCopy.GetPiece(move.FromCol, move.FromRow);
 
             // Update the board	
             chessCopy.UpdateBoard(move);
@@ -488,7 +488,7 @@ namespace ChessWpf.Models
                 for (int row = 0; row < BOARD_SIZE; row++)
                 {
                     // Get the piece at the location
-                    Pieces piece = GetPiece(col, row);
+                    Piece piece = GetPiece(col, row);
 
                     if (piece.Player == Opponent)
                     {

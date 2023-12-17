@@ -7,7 +7,7 @@ using System.Windows.Navigation;
 
 namespace ChessWpf.Models.Pieces
 {
-    public class Rook : Pieces
+    public class Rook : Piece
     {
         public const int BOARD_SIZE = 8;
 
@@ -27,12 +27,12 @@ namespace ChessWpf.Models.Pieces
         public Rook(Player player) : base(PieceType.Rook, player) { }
 
         // Copy
-        public override Pieces Clone()
+        public override Piece Clone()
         {
             return new Rook(Player);
         }
 
-        public override bool CheckValidMove(Move move, Pieces[,] board, Player currentPlayer, Move? lastMove)
+        public override bool CheckValidMove(Move move, Piece[,] board, Player currentPlayer, Move? lastMove)
         {
             // Check if the move is out of bounds
             if (move.ToRow > BOARD_SIZE - 1 || move.ToRow < 0 || move.ToCol > BOARD_SIZE - 1 || move.ToCol < 0)

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChessWpf.Models.Pieces
 {
-    public class Queen : Pieces
+    public class Queen : Piece
     {
         private const int BOARD_SIZE = 8;
 
@@ -14,12 +14,12 @@ namespace ChessWpf.Models.Pieces
         public Queen(Player player) : base(PieceType.Queen, player) { }
 
         // Copy
-        public override Pieces Clone()
+        public override Piece Clone()
         {
             return new Queen(Player);
         }
 
-        private bool CheckValidStraightMove(Move move, Pieces[,] board, Player currentPlayer, Move? lastMove)
+        private bool CheckValidStraightMove(Move move, Piece[,] board, Player currentPlayer, Move? lastMove)
         {
             // Check if trying to move diagonally
             if (move.FromCol != move.ToCol && move.FromRow != move.ToRow)
@@ -94,7 +94,7 @@ namespace ChessWpf.Models.Pieces
             return true;
         }
 
-        private bool CheckValidDiagonalMove(Move move, Pieces[,] board, Player currentPlayer, Move? lastMove)
+        private bool CheckValidDiagonalMove(Move move, Piece[,] board, Player currentPlayer, Move? lastMove)
         {
             // Check if the move is diagonal
             int rowDifference = Math.Abs(move.ToRow - move.FromRow);
@@ -159,7 +159,7 @@ namespace ChessWpf.Models.Pieces
             return true;
         }
 
-        public override bool CheckValidMove(Move move, Pieces[,] board, Player currentPlayer, Move? lastMove)
+        public override bool CheckValidMove(Move move, Piece[,] board, Player currentPlayer, Move? lastMove)
         {
             // Check if the move is out of bounds
             if (move.ToRow > BOARD_SIZE - 1 || move.ToRow < 0 || move.ToCol > BOARD_SIZE - 1 || move.ToCol < 0)

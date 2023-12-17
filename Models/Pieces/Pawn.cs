@@ -7,7 +7,7 @@ using System.Windows.Navigation;
 
 namespace ChessWpf.Models.Pieces
 {
-    public class Pawn : Pieces
+    public class Pawn : Piece
     {
         private const int BOARD_SIZE = 8;
         private bool hasMoved;
@@ -18,7 +18,7 @@ namespace ChessWpf.Models.Pieces
         }
 
         // Copy
-        public override Pieces Clone()
+        public override Piece Clone()
         {
 
             return new Pawn(Player)
@@ -27,7 +27,7 @@ namespace ChessWpf.Models.Pieces
             };
         }
 
-        public override bool CheckValidMove(Move move, Pieces[,] board, Player currentPlayer, Move? lastMove)
+        public override bool CheckValidMove(Move move, Piece[,] board, Player currentPlayer, Move? lastMove)
         {
             // Check if the move is out of bounds
             if (move.ToRow > BOARD_SIZE - 1 || move.ToRow < 0 || move.ToCol > BOARD_SIZE - 1 || move.ToCol < 0)

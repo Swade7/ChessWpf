@@ -71,6 +71,14 @@ namespace ChessWpf.Models
         List<Piece> blackPieces;
 
         // Properties
+
+        public int BoardSize
+        {
+            get
+            {
+                return BOARD_SIZE;
+            }
+        }
         public Player CurrentPlayer
         {
             get

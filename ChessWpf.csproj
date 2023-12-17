@@ -80,6 +80,7 @@
   <ItemGroup>
     <Compile Include="Models\Pieces\Pawn.cs" />
     <Compile Include="Models\Pieces\Pieces.cs" />
+    <Compile Include="Models\Pieces\Rook.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

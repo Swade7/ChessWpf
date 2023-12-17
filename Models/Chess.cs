@@ -125,16 +125,6 @@ namespace ChessWpf.Models
             {
                 // Create a list to store the possible moves
                 List<Move> moves = new List<Move>();
-                // Get Piece that belong to the current player
-                List<Piece> Pieces = new List<Piece>();
-                if (CurrentPlayer == Player.White)
-                {
-                    Pieces = WhitePieces;
-                }
-                else if (CurrentPlayer == Player.Black)
-                {
-                    Pieces = BlackPieces;
-                }
 
                 // Iterate over the board to find the Piece that belong to the currentPlayer
                 for (int col = 0; col < BOARD_SIZE; col++)
@@ -143,7 +133,6 @@ namespace ChessWpf.Models
                     {
                         if (board[col, row].Player == CurrentPlayer)
                         {
-                            Piece currentPiece = GetPiece(col, row);
                             // Check each possible "to" location
                             for (int toCol = 0; toCol < BOARD_SIZE; toCol++)
                             {

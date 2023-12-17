@@ -106,6 +106,21 @@ namespace ChessWpf
             }
         }
 
+        public Move? LastMove
+        {
+            get
+            {
+                if (moves.Count > 0)
+                {
+                    return moves[moves.Count - 1];
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
         public List<Move> PossibleMoves {
             get
             {

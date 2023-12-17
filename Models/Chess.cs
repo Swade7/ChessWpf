@@ -55,7 +55,6 @@ namespace ChessWpf.Models
     }
 
     
-    
     public class Chess
     {
         public const int BOARD_SIZE = 8;
@@ -68,8 +67,8 @@ namespace ChessWpf.Models
         bool hasWhiteCastled;
         bool hasBlackCastled;
         Piece[,] board;
-        List<Piece> whitePiece;
-        List<Piece> blackPiece;
+        List<Piece> whitePieces;
+        List<Piece> blackPieces;
 
         // Properties
         public Player CurrentPlayer
@@ -127,14 +126,14 @@ namespace ChessWpf.Models
                 // Create a list to store the possible moves
                 List<Move> moves = new List<Move>();
                 // Get Piece that belong to the current player
-                List<Piece> Piece = new List<Piece>();
+                List<Piece> Pieces = new List<Piece>();
                 if (CurrentPlayer == Player.White)
                 {
-                    Piece = WhitePiece;
+                    Pieces = WhitePieces;
                 }
                 else if (CurrentPlayer == Player.Black)
                 {
-                    Piece = BlackPiece;
+                    Pieces = BlackPieces;
                 }
 
                 // Iterate over the board to find the Piece that belong to the currentPlayer
@@ -179,17 +178,17 @@ namespace ChessWpf.Models
             }
         }
 
-        public List<Piece> BlackPiece {
+        public List<Piece> BlackPieces {
             get
             {
-                return blackPiece;
+                return blackPieces;
             }
         }
-        public List<Piece> WhitePiece 
+        public List<Piece> WhitePieces 
         {
             get
             {
-                return whitePiece;
+                return whitePieces;
             }
         }
 
@@ -208,12 +207,10 @@ namespace ChessWpf.Models
             moves = rhs.moves;
             movesSincePawnMovedOrPieceCaptured = rhs.movesSincePawnMovedOrPieceCaptured;
             board = rhs.board;
-            whitePiece = rhs.whitePiece;
-            blackPiece = rhs.blackPiece;
+            whitePieces = rhs.whitePieces;
+            blackPieces = rhs.blackPieces;
         }
 
-        
-    
         private void InitializeBoard()
         {
             for (int i = 0; i < BOARD_SIZE; i++)
@@ -248,6 +245,16 @@ namespace ChessWpf.Models
             board[4, WHITE_ROW] = new King(Player.White);
             board[4, BLACK_ROW] = new King(Player.Black);
 
+            // Add the pieces to the lists
+            whitePieces = new List<Piece>();
+            blackPieces = new List<Piece>();
+            for (int col = 0; col < BOARD_SIZE; col++)
+            {
+                whitePieces.Add(board[col, WHITE_ROW]);
+                whitePieces.Add(board[col, WHITE_ROW + 1]);
+                blackPieces.Add(board[col, BLACK_ROW]);
+                blackPieces.Add(board[col, BLACK_ROW - 1]);
+            }
 
             // Initialize the empty places
             for (int col = 0; col < BOARD_SIZE; col++)
@@ -269,7 +276,7 @@ namespace ChessWpf.Models
             Piece piece = GetPiece(move.FromCol, move.FromRow);
             PieceType pieceType = piece.PieceType;
 
-            if (piece.CheckValidMove(move, board, currentPlayer, GetLastMove()))
+            if (piece.CheckValidMove(move, board, currentPlayer, LastMove))
             {
                 if (!WouldBeCheck(move))
                 {
@@ -303,8 +310,6 @@ namespace ChessWpf.Models
                     }
 
                     ChangeTurn();
-
-                    //Move lastMove = GetLastMove();
                 }
                 else
                 {
@@ -320,18 +325,6 @@ namespace ChessWpf.Models
         private Piece GetPiece(int col, int row)
         {
             return board[col, row];
-        }
-
-        public Move? GetLastMove()
-        {
-            if (NumMoves > 0)
-            {
-                return moves[moves.Count - 1];
-            }
-            else
-            {
-                return null; // Return null to indicate no last move
-            }
         }
 
         public Status UpdateStatus()
@@ -481,7 +474,7 @@ namespace ChessWpf.Models
                             ToRow = pieceRow
                         };
 
-                        if (piece.CheckValidMove(move, Board, opponent, GetLastMove()))
+                        if (piece.CheckValidMove(move, Board, opponent, LastMove))
                         {
                             return true;
                         }

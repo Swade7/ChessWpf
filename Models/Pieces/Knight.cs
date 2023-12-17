@@ -1,11 +1,10 @@
-﻿using ChessWpf;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.Pieces.ChessWpf
+namespace ChessWpf.Models.Pieces
 {
     public class Knight : Pieces
     {

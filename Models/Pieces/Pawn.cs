@@ -1,12 +1,11 @@
-﻿using ChessWpf;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Navigation;
 
-namespace Models.Pieces.ChessWpf
+namespace ChessWpf.Models.Pieces
 {
     public class Pawn : Pieces
     {

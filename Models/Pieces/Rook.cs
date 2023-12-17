@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Navigation;
-using ChessWpf;
 
-namespace Models.Pieces.ChessWpf
+namespace ChessWpf.Models.Pieces
 {
     public class Rook : Pieces
     {

@@ -86,9 +86,13 @@ namespace ChessWpf
                         {
                             System.Diagnostics.Debug.WriteLine("Black piece at row " + row + " col " + col);
                         }
-                        else
+                        else if (game.Board[row, col].Player == Player.White)
                         {
                             System.Diagnostics.Debug.WriteLine("White piece at row " + row + " col " + col);
+                        }
+                        else
+                        {
+                            System.Diagnostics.Debug.WriteLine("No piece at row " + row + " col " + col);
                         }
                         Image pieceImage = new Image();
                         pieceImage.Width = rectSize;
@@ -97,6 +101,7 @@ namespace ChessWpf
                         //pieceImage.MouseLeftButtonDown += PieceImage_MouseLeftButtonDown;
 
                         string fileName = game.Board[row, col].Player.ToString() + game.Board[row, col].GetType().Name.ToString() + ".png";
+                        //fileName = "WhiteKing.png";
                         pieceImage.Source = new BitmapImage(new Uri("Images/" + fileName, UriKind.Relative));
 
                         Canvas.SetLeft(pieceImage, col * rectSize);

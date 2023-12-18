@@ -109,20 +109,20 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\Chess King Black.png" />
+    <Resource Include="Images\BlackKing.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\Chess Bishop Black.png" />
-    <Resource Include="Images\Chess Bishop White.png" />
-    <Resource Include="Images\Chess King White.png" />
-    <Resource Include="Images\Chess Knight Black.png" />
-    <Resource Include="Images\Chess Knight White.png" />
-    <Resource Include="Images\Chess Pawn Black.png" />
-    <Resource Include="Images\Chess Pawn White.png" />
-    <Resource Include="Images\Chess Queen Black.png" />
-    <Resource Include="Images\Chess Queen White.png" />
-    <Resource Include="Images\Chess Rook Black.png" />
-    <Resource Include="Images\Chess Rook White.png" />
+    <Resource Include="Images\BlackBishop.png" />
+    <Resource Include="Images\WhiteBishop.png" />
+    <Resource Include="Images\WhiteKing.png" />
+    <Resource Include="Images\BlackKnight.png" />
+    <Resource Include="Images\WhiteKnight.png" />
+    <Resource Include="Images\BlackPawn.png" />
+    <Resource Include="Images\WhitePawn.png" />
+    <Resource Include="Images\BlackQueen.png" />
+    <Resource Include="Images\WhiteQueen.png" />
+    <Resource Include="Images\BlackRook.png" />
+    <Resource Include="Images\WhiteRook.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

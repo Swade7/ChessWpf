@@ -108,5 +108,21 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Chess King Black.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Chess Bishop Black.png" />
+    <Resource Include="Images\Chess Bishop White.png" />
+    <Resource Include="Images\Chess King White.png" />
+    <Resource Include="Images\Chess Knight Black.png" />
+    <Resource Include="Images\Chess Knight White.png" />
+    <Resource Include="Images\Chess Pawn Black.png" />
+    <Resource Include="Images\Chess Pawn White.png" />
+    <Resource Include="Images\Chess Queen Black.png" />
+    <Resource Include="Images\Chess Queen White.png" />
+    <Resource Include="Images\Chess Rook Black.png" />
+    <Resource Include="Images\Chess Rook White.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

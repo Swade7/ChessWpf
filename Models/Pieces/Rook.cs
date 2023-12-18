@@ -41,13 +41,13 @@ namespace ChessWpf.Models.Pieces
             }
 
             // Check if the piece belongs to the current player
-            if (board[move.FromCol, move.FromRow].Player != currentPlayer)
+            if (board[move.FromRow, move.FromCol].Player != currentPlayer)
             {
                 return false;
             }
 
             // Check if the space to be moved to is already occupied by the current player's piece
-            if (board[move.ToCol, move.ToRow].Player == currentPlayer)
+            if (board[move.ToRow, move.ToCol].Player == currentPlayer)
             {
                 return false;
             }

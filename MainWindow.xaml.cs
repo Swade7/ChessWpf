@@ -1,6 +1,7 @@
 ﻿using ChessWpf.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,45 +29,18 @@ namespace ChessWpf
             InitializeComponent();
 
             game = new ChessWpf.Models.Chess();
-            //CreateGrid();
+
             CreateBoard();
-            DrawBoard();
-
+            DrawPieces();
         }
 
-        private void CreateGrid()
-        {
-            rectSize = (int)boardCanvas.Width / game.BoardSize;
-            // Create Rectangles for the grid
-            for (int row = 0; row < game.BoardSize; row++)
-            {
-                for (int col = 0; col < game.BoardSize; col++)
-                {
-                    Rectangle rect = new Rectangle();
-                    rect.Width = rectSize;
-                    rect.Height = rectSize;
-                    rect.Fill = (row + col) % 2 == 0 ? Brushes.AntiqueWhite : Brushes.DarkOliveGreen;
-                    rect.Tag = new Point(row, col); 
-                    // TODO: Add event handler for when the rectangle is clicked
-                    rect.MouseLeftButtonDown += boardCanvas_MouseLeftButtonDown;
-                    Canvas.SetLeft(rect, col * rectSize);
-                    Canvas.SetTop(rect, row * rectSize);
-                    boardCanvas.Children.Add(rect);
-                }
-            }
-        }
-
-        // Show the pieces on the board
         private void CreateBoard()
         {
             // Clear the board
             boardCanvas.Children.Clear();
-            
 
-            // Loop through the board and draw the pieces at the center of each square using the images from the Images folder
-
+            // Draw squares
             int rectSize = (int)boardCanvas.Width / game.BoardSize;
-
             for (int row = 0; row < game.BoardSize; row++)
             {
                 for (int col = 0; col < game.BoardSize; col++)
@@ -75,65 +49,43 @@ namespace ChessWpf
                     rect.Width = rectSize;
                     rect.Height = rectSize;
                     rect.Fill = (row + col) % 2 == 0 ? Brushes.AntiqueWhite : Brushes.DarkOliveGreen;
-                    rect.Tag = new Point(row, col); // Store the row and col in the Tag property so we can get it later
+                    rect.Tag = new Point(row, col);
 
                     rect.MouseLeftButtonDown += boardCanvas_MouseLeftButtonDown;
 
                     Canvas.SetLeft(rect, col * rectSize);
                     Canvas.SetTop(rect, row * rectSize);
                     boardCanvas.Children.Add(rect);
-
-                    
                 }
             }
-
-
         }
 
-        private void DrawBoard()
+        private void DrawPieces()
         {
-            CreateBoard();
+            // Draw pieces
+            int rectSize = (int)boardCanvas.Width / game.BoardSize;
             for (int row = 0; row < game.BoardSize; row++)
             {
                 for (int col = 0; col < game.BoardSize; col++)
                 {
                     if (game.Board[row, col].Player != Player.None)
                     {
-                        if (game.Board[row, col].Player == Player.Black)
-                        {
-                            System.Diagnostics.Debug.WriteLine("Black piece at row " + row + " col " + col);
-                        }
-                        else if (game.Board[row, col].Player == Player.White)
-                        {
-                            System.Diagnostics.Debug.WriteLine("White piece at row " + row + " col " + col);
-                        }
-                        else
-                        {
-                            System.Diagnostics.Debug.WriteLine("No piece at row " + row + " col " + col);
-                        }
                         Image pieceImage = new Image();
                         pieceImage.Width = rectSize;
                         pieceImage.Height = rectSize;
-                        pieceImage.Tag = new Point(row, col); // Store the row and col in the Tag property so we can get it later
-                                                              //pieceImage.MouseLeftButtonDown += PieceImage_MouseLeftButtonDown;
+                        pieceImage.Tag = new Point(row, col);
                         pieceImage.MouseLeftButtonDown += boardCanvas_MouseLeftButtonDown;
 
+                        // Show the image assiciated with the player and piece type
                         string fileName = game.Board[row, col].Player.ToString() + game.Board[row, col].GetType().Name.ToString() + ".png";
-                        fileName = "WhitePawn.png";
                         pieceImage.Source = new BitmapImage(new Uri("Images/" + fileName, UriKind.Relative));
 
                         Canvas.SetLeft(pieceImage, col * rectSize);
                         Canvas.SetTop(pieceImage, row * rectSize);
                         boardCanvas.Children.Add(pieceImage);
                     }
-                    else
-                    {
-                        System.Diagnostics.Debug.WriteLine("No piece at row " + row + " col " + col);
-                    }
                 }
             }
-            // Draw the pieces
-           
         }
 
         private void boardCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -160,8 +112,10 @@ namespace ChessWpf
                 bool moveSuccess = game.MakeMove(move);
                 if (moveSuccess)
                 {
-                    // TODO: Update the UI
-                    DrawBoard();
+                    System.Diagnostics.Debug.WriteLine("Move successful");
+                    // Update the UI
+                    DrawPieces();
+
                     game.SelectedLocation = new Point(-1, -1);
                 }
                 else
@@ -177,6 +131,7 @@ namespace ChessWpf
                     
                 }
             }
+            DrawPieces();
         }
 
         private void DisplaySelectedPiece()

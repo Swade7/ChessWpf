@@ -266,6 +266,8 @@ namespace ChessWpf.Models
                 }
             }
 
+            moves = new List<Move>();
+
             // Set the current player to white
             currentPlayer = Player.White;
 
@@ -277,6 +279,7 @@ namespace ChessWpf.Models
         public bool MakeMove(Move move)
         {
             Piece piece = GetPiece(move.FromRow, move.FromCol);
+            System.Diagnostics.Debug.WriteLine(piece.PieceType + " attempted to be moved");
             PieceType pieceType = piece.PieceType;
 
             if (piece.CheckValidMove(move, board, currentPlayer, LastMove))

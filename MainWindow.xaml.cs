@@ -22,19 +22,21 @@ namespace ChessWpf
     public partial class MainWindow : Window
     {
         private ChessWpf.Models.Chess game;
+        int rectSize = 0;
         public MainWindow()
         {
             InitializeComponent();
 
             game = new ChessWpf.Models.Chess();
             //CreateGrid();
-            DrawPieces();
+            CreateBoard();
+            DrawBoard();
 
         }
 
         private void CreateGrid()
         {
-            int rectSize = (int)boardCanvas.Width / game.BoardSize;
+            rectSize = (int)boardCanvas.Width / game.BoardSize;
             // Create Rectangles for the grid
             for (int row = 0; row < game.BoardSize; row++)
             {
@@ -46,7 +48,7 @@ namespace ChessWpf
                     rect.Fill = (row + col) % 2 == 0 ? Brushes.AntiqueWhite : Brushes.DarkOliveGreen;
                     rect.Tag = new Point(row, col); 
                     // TODO: Add event handler for when the rectangle is clicked
-
+                    rect.MouseLeftButtonDown += boardCanvas_MouseLeftButtonDown;
                     Canvas.SetLeft(rect, col * rectSize);
                     Canvas.SetTop(rect, row * rectSize);
                     boardCanvas.Children.Add(rect);
@@ -55,10 +57,11 @@ namespace ChessWpf
         }
 
         // Show the pieces on the board
-        private void DrawPieces()
+        private void CreateBoard()
         {
             // Clear the board
             boardCanvas.Children.Clear();
+            
 
             // Loop through the board and draw the pieces at the center of each square using the images from the Images folder
 
@@ -73,14 +76,28 @@ namespace ChessWpf
                     rect.Height = rectSize;
                     rect.Fill = (row + col) % 2 == 0 ? Brushes.AntiqueWhite : Brushes.DarkOliveGreen;
                     rect.Tag = new Point(row, col); // Store the row and col in the Tag property so we can get it later
-                    //rect.MouseLeftButtonDown += Rect_MouseLeftButtonDown;
+
+                    rect.MouseLeftButtonDown += boardCanvas_MouseLeftButtonDown;
 
                     Canvas.SetLeft(rect, col * rectSize);
                     Canvas.SetTop(rect, row * rectSize);
                     boardCanvas.Children.Add(rect);
 
-                    // Draw the pieces
-                    if (game.Board[row, col] != null)
+                    
+                }
+            }
+
+
+        }
+
+        private void DrawBoard()
+        {
+            CreateBoard();
+            for (int row = 0; row < game.BoardSize; row++)
+            {
+                for (int col = 0; col < game.BoardSize; col++)
+                {
+                    if (game.Board[row, col].Player != Player.None)
                     {
                         if (game.Board[row, col].Player == Player.Black)
                         {
@@ -98,10 +115,11 @@ namespace ChessWpf
                         pieceImage.Width = rectSize;
                         pieceImage.Height = rectSize;
                         pieceImage.Tag = new Point(row, col); // Store the row and col in the Tag property so we can get it later
-                        //pieceImage.MouseLeftButtonDown += PieceImage_MouseLeftButtonDown;
+                                                              //pieceImage.MouseLeftButtonDown += PieceImage_MouseLeftButtonDown;
+                        pieceImage.MouseLeftButtonDown += boardCanvas_MouseLeftButtonDown;
 
                         string fileName = game.Board[row, col].Player.ToString() + game.Board[row, col].GetType().Name.ToString() + ".png";
-                        //fileName = "WhiteKing.png";
+                        fileName = "WhitePawn.png";
                         pieceImage.Source = new BitmapImage(new Uri("Images/" + fileName, UriKind.Relative));
 
                         Canvas.SetLeft(pieceImage, col * rectSize);
@@ -114,8 +132,8 @@ namespace ChessWpf
                     }
                 }
             }
-
-
+            // Draw the pieces
+           
         }
 
         private void boardCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -128,21 +146,44 @@ namespace ChessWpf
             if (game.SelectedLocation == new Point(-1, -1))
             {
                 game.SelectedLocation = new Point(row, col);
+                System.Diagnostics.Debug.WriteLine("Selected " + game.Board[row, col].Player + game.Board[row, col].GetType().Name + " at row " + row + " col " + col);
             }
             else
             {
+                System.Diagnostics.Debug.WriteLine("Moving " + game.Board[(int)game.SelectedLocation.X, (int)game.SelectedLocation.Y].Player + game.Board[(int)game.SelectedLocation.X, (int)game.SelectedLocation.Y].GetType().Name + " from row " + game.SelectedLocation.X + " col " + game.SelectedLocation.Y + " to row " + row + " col " + col);
                 Move move = new Move 
                 {
-                    FromCol = (int)game.SelectedLocation.X,
-                    FromRow = (int)game.SelectedLocation.Y,
+                    FromCol = (int)game.SelectedLocation.Y,
+                    FromRow = (int)game.SelectedLocation.X,
                     ToCol = col,
                     ToRow = row };
                 bool moveSuccess = game.MakeMove(move);
                 if (moveSuccess)
                 {
                     // TODO: Update the UI
+                    DrawBoard();
+                    game.SelectedLocation = new Point(-1, -1);
+                }
+                else
+                {
+                    if (game.Board[row, col].Player == game.CurrentPlayer)
+                    {
+                        game.SelectedLocation = new Point(row, col);
+                    }
+                    else
+                    {
+                        game.SelectedLocation = new Point(-1, -1);
+                    }
+                    
                 }
             }
+        }
+
+        private void DisplaySelectedPiece()
+        {
+            // Show the selected piece with a blue tint behind it on the square
+
+
         }
     }
 }

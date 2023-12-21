@@ -92,7 +92,7 @@ namespace ChessWpf.Models.Pieces
             if (move.ToCol != move.FromCol)
             {
                 // Check for en passant capturing
-                if (board[move.ToCol, move.ToRow].Player != opponent)
+                if (board[move.ToRow, move.ToCol].Player != opponent)
                 {
                     if (lastMove == null)
                     {

@@ -22,13 +22,13 @@ namespace ChessWpf
     /// </summary>
     public partial class MainWindow : Window
     {
-        private ChessWpf.Models.Chess game;
+        private Chess game;
         int rectSize = 0;
         public MainWindow()
         {
             InitializeComponent();
 
-            game = new ChessWpf.Models.Chess();
+            game = new Chess();
 
             CreateBoard();
             DrawPieces();
@@ -60,8 +60,27 @@ namespace ChessWpf
             }
         }
 
+        private void RemovePiecesFromBoard()
+        {
+            List<UIElement> piecesToRemove = new List<UIElement>();
+            foreach (UIElement element in boardCanvas.Children)
+            {
+                if (element is Image)
+                {
+                    piecesToRemove.Add(element);
+                }
+            }
+
+            foreach (UIElement element in piecesToRemove)
+            {
+                boardCanvas.Children.Remove(element);
+            }
+        }
         private void DrawPieces()
         {
+            // Remove existing pieces
+            RemovePiecesFromBoard();
+
             // Draw pieces
             int rectSize = (int)boardCanvas.Width / game.BoardSize;
             for (int row = 0; row < game.BoardSize; row++)
@@ -76,7 +95,7 @@ namespace ChessWpf
                         pieceImage.Tag = new Point(row, col);
                         pieceImage.MouseLeftButtonDown += boardCanvas_MouseLeftButtonDown;
 
-                        // Show the image assiciated with the player and piece type
+                        // Show the image associated with the player and piece type
                         string fileName = game.Board[row, col].Player.ToString() + game.Board[row, col].GetType().Name.ToString() + ".png";
                         pieceImage.Source = new BitmapImage(new Uri("Images/" + fileName, UriKind.Relative));
 
@@ -86,7 +105,9 @@ namespace ChessWpf
                     }
                 }
             }
+            System.Diagnostics.Debug.WriteLine(game.Board[3, 3].GetType());
         }
+
 
         private void boardCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {

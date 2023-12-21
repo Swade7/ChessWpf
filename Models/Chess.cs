@@ -262,7 +262,7 @@ namespace ChessWpf.Models
             {
                 for (int row = WHITE_ROW + 2; row <= BLACK_ROW - 2; row++)
                 {
-                    board[row, col] = new Empty();
+                    board[row, col] = Empty.Instance;
                 }
             }
 
@@ -578,11 +578,32 @@ namespace ChessWpf.Models
             else
             {
                 movesSincePawnMovedOrPieceCaptured++;
+            };
+
+            // Create a new board to store the updated board
+            Piece[,] newBoard = new Piece[BOARD_SIZE, BOARD_SIZE];
+            for (int row = 0; row < BOARD_SIZE; row++)
+            {
+                for (int col = 0; col < BOARD_SIZE; col++)
+                {
+                    if (row == move.ToRow && col == move.ToCol)
+                    {
+                        newBoard[row, col] = board[move.FromRow, move.FromCol].Clone();
+                    }
+                    else if (row == move.FromRow && col == move.FromCol)
+                    {
+                        newBoard[row, col] = Empty.Instance;
+                    }
+                    else
+                    {
+                        newBoard[row, col] = board[row, col].Clone();
+                    }
+                    
+                }
             }
 
-            // Move the piece and setthe previous space to Empty
-            board[move.ToRow, move.ToCol] = board[move.FromRow, move.FromCol];
-            board[move.FromRow, move.FromCol] = new Empty();
+            // Set the board to the new board
+            board = newBoard;
         }
     }
 }

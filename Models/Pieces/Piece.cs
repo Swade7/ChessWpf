@@ -37,7 +37,7 @@ namespace ChessWpf.Models.Pieces
             {
                 return player;
             }
-            private set
+            set
             {
                 player = value;
             }

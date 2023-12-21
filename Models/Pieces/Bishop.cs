@@ -24,24 +24,28 @@ namespace ChessWpf.Models.Pieces
             // Check if the move is out of bounds
             if (move.ToRow > BOARD_SIZE - 1 || move.ToRow < 0 || move.ToCol > BOARD_SIZE - 1 || move.ToCol < 0)
             {
+                System.Diagnostics.Debug.WriteLine("Out of bounds");
                 return false;
             }
 
             // Check if the piece belongs to the current player
             if (board[move.FromRow, move.FromCol].Player != currentPlayer)
             {
+                System.Diagnostics.Debug.WriteLine("Not current player");
                 return false;
             }
 
             // Check if the space to be moved to is already occupied by the current player's piece
             if (board[move.ToRow, move.ToCol].Player == currentPlayer)
             {
+                System.Diagnostics.Debug.WriteLine("Already occupied by" + board[move.ToRow, move.ToCol].Player.ToString());
                 return false;
             }
 
             // Make sure they are actually moving
             else if (move.FromCol == move.ToCol && move.ToRow == move.FromRow)
             {
+                System.Diagnostics.Debug.WriteLine("Not moving");
                 return false;
             }
 
@@ -51,6 +55,7 @@ namespace ChessWpf.Models.Pieces
 
             if (rowDifference != colDifference)
             {
+                System.Diagnostics.Debug.WriteLine("Not diagonal");
                 return false;
             }
 
@@ -61,8 +66,10 @@ namespace ChessWpf.Models.Pieces
                 {
                     for (int i = move.FromCol + 1; i < move.ToCol; i++)
                     {
-                        if (board[i, move.FromRow + (i - move.FromCol)].Player != Player.None)
+                        if (board[move.FromRow + (i - move.FromCol), i].Player != Player.None)
                         {
+                            System.Diagnostics.Debug.WriteLine($"Piece: {board[move.FromRow + (i - move.FromCol), i].PieceType.ToString()}" +
+                                $" blocking path at: {i}, {move.FromRow + (i - move.FromCol)}");
                             return false;
                         }
                     }
@@ -72,8 +79,10 @@ namespace ChessWpf.Models.Pieces
                 {
                     for (int i = move.FromCol + 1; i < move.ToCol; i++)
                     {
-                        if (board[i, move.FromRow - (i - move.FromCol)].Player != Player.None)
+                        if (board[move.FromRow - (i - move.FromCol), i].Player != Player.None)
                         {
+                            System.Diagnostics.Debug.WriteLine($"Piece: {board[move.FromRow + (i - move.FromCol), i].PieceType.ToString()}" +
+                                $" blocking path at: {i}, {move.FromRow - (i - move.FromCol)}");
                             return false;
                         }
                     }
@@ -86,8 +95,10 @@ namespace ChessWpf.Models.Pieces
                 {
                     for (int i = move.ToCol + 1; i < move.FromCol; i++)
                     {
-                        if (board[i, move.ToRow - (i - move.FromRow)].Player != Player.None)
+                        if (board[move.ToRow - (i - move.FromRow), i].Player != Player.None)
                         {
+                            System.Diagnostics.Debug.WriteLine($"Piece: {board[move.ToRow - (i - move.FromRow), i].PieceType.ToString()}" +
+                                $" blocking path at: {i}, {move.ToRow - (i - move.FromRow)}");
                             return false;
                         }
                     }
@@ -97,8 +108,10 @@ namespace ChessWpf.Models.Pieces
                 {
                     for (int i = move.ToCol + 1; i < move.FromCol; i++)
                     {
-                        if (board[i, move.ToRow + (i - move.ToCol)].Player != Player.None)
+                        if (board[move.ToRow + (i - move.ToCol), i].Player != Player.None)
                         {
+                            System.Diagnostics.Debug.WriteLine($"Piece: {board[move.ToRow + (i - move.ToCol), i].PieceType.ToString()}" +
+                                $" blocking path at: {i}, {move.ToRow + (i - move.ToCol)}");
                             return false;
                         }
                     }

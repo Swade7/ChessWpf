@@ -23,7 +23,7 @@ namespace ChessWpf
     public partial class MainWindow : Window
     {
         private Chess game;
-        int rectSize = 0;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -152,14 +152,6 @@ namespace ChessWpf
                     
                 }
             }
-            DrawPieces();
-        }
-
-        private void DisplaySelectedPiece()
-        {
-            // Show the selected piece with a blue tint behind it on the square
-
-
         }
     }
 }

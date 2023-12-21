@@ -46,7 +46,7 @@ namespace ChessWpf.Models.Pieces
             // Check if the space to be moved to is already occupied by the current player's piece
             if (board[move.ToRow, move.ToCol].Player == currentPlayer)
             {   
-                System.Diagnostics.Debug.WriteLine("Already occupied");
+                System.Diagnostics.Debug.WriteLine("Already occupied by" + board[move.ToRow, move.ToCol].Player.ToString());
                 return false;
             }
 
@@ -99,26 +99,24 @@ namespace ChessWpf.Models.Pieces
                         System.Diagnostics.Debug.WriteLine("No last move");
                         return false;
                     }
-                    else if (lastMove.Value.ToCol != move.ToCol
-                        || lastMove.Value.ToRow != move.ToRow - dir
-                        || lastMove.Value.ToCol != move.ToCol
-                        || lastMove.Value.ToRow != move.FromRow
+                    else if (lastMove.Value.ToRow != move.FromRow
+                        || Math.Abs(move.FromCol - lastMove.Value.ToCol) != 1
                         || Math.Abs(lastMove.Value.FromRow - lastMove.Value.ToRow) != 2
-                        || board[lastMove.Value.ToCol, lastMove.Value.ToRow].PieceType != PieceType.Pawn)
+                        || board[lastMove.Value.ToRow, lastMove.Value.ToCol].PieceType != PieceType.Pawn)
                     {
                         System.Diagnostics.Debug.WriteLine("Not en passant");
                         return false;
                     }
                 }
-                else if (board[move.ToCol, move.ToRow].Player != opponent)
+                else if (board[move.ToRow, move.ToCol].Player != opponent)
                 {
-                    System.Diagnostics.Debug.WriteLine("Attempting to capture piece with pawn that isn't opponent's");
+                    System.Diagnostics.Debug.WriteLine("Attempting to capture piece with pawn that isn't opponent's (Player = " + board[move.ToRow, move.ToCol].Player.ToString());
                     return false;
                 }
             }
-            else if (board[move.ToCol, move.ToRow].Player != Player.None)
+            else if (board[move.ToRow, move.ToCol].Player != Player.None)
             {
-                System.Diagnostics.Debug.WriteLine("Attempting to move to a space that is already occupied");
+                System.Diagnostics.Debug.WriteLine("Attempting to move to a space that is already occupied by");
                 return false;
             }
             

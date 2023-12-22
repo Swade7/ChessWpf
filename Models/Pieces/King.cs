@@ -60,14 +60,14 @@ namespace ChessWpf.Models.Pieces
                 int rookCol = move.FromCol > move.ToCol ? 0 : 7;
 
                 // Get the Rook's Row
-                int rookRow = board[move.FromCol, move.FromRow].Player == Player.White ? 0 : 7;
+                int rookRow = board[move.FromRow, move.FromCol].Player == Player.White ? 0 : 7;
 
                 // Check if the Rook is there
-                if (board[rookCol, rookRow].PieceType == PieceType.Rook &&
-                    board[rookCol, rookRow].Player == currentPlayer)
+                if (board[rookRow, rookCol].PieceType == PieceType.Rook &&
+                    board[rookRow, rookCol].Player == currentPlayer)
                 {
                     // Check if the Rook has moved
-                    if (((Rook)board[rookCol, rookRow]).HasMoved)
+                    if (((Rook)board[rookRow, rookCol]).HasMoved)
                     {
                         return false;
                     }
@@ -75,7 +75,7 @@ namespace ChessWpf.Models.Pieces
                     // Check if the path is clear
                     for (int i = Math.Min(move.FromCol, move.ToCol) + 1; i < Math.Max(move.FromCol, move.ToCol); i++)
                     {
-                        if (board[i, move.FromRow].Player != Player.None)
+                        if (board[move.FromRow, i].Player != Player.None)
                         {
                             return false;
                         }

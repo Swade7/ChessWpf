@@ -296,6 +296,7 @@ namespace ChessWpf.Models
                             tempBoard[move.FromRow, i - 1] = new Empty();
                             if (UnderAttack(move.FromRow, i))
                             {
+                                Console.WriteLine("UnderAttack returned true in MakeMove");
                                 return false;
                             }
                         }
@@ -399,6 +400,7 @@ namespace ChessWpf.Models
 
         public bool Check()
         {
+            System.Diagnostics.Debug.WriteLine("Check() called");
             // Declare variables for the king location
             int kingCol = -1;
             int kingRow = -1;
@@ -407,10 +409,18 @@ namespace ChessWpf.Models
             // Locate the king
             for (int row = 0; row < BOARD_SIZE; row++)
             {
-                for (int col = 0; row < BOARD_SIZE; row++)
+                for (int col = 0; col < BOARD_SIZE; col++)
                 {
                     // Get the piece at the location
                     Piece piece = GetPiece(row, col);
+                    if (piece.PieceType == PieceType.King)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"{piece.Player} King found at {row}, {col}");
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine($"{piece.Player} {piece.PieceType} found at {row}, {col}");
+                    }
                     if (piece.PieceType == PieceType.King && piece.Player == currentPlayer)
                     {
                         kingCol = col;
@@ -418,6 +428,7 @@ namespace ChessWpf.Models
 
                         break;
                     }
+
                 }
                 if (kingCol != -1 && kingRow != -1)
                 {
@@ -461,6 +472,7 @@ namespace ChessWpf.Models
 
         public bool UnderAttack(int pieceRow, int pieceCol)
         {
+            System.Diagnostics.Debug.WriteLine("UnderAttack() called");
             // Get the opponent
             Player opponent = Opponent;
 
@@ -485,7 +497,12 @@ namespace ChessWpf.Models
 
                         if (piece.CheckValidMove(move, Board, opponent, LastMove))
                         {
+                            System.Diagnostics.Debug.WriteLine($"Piece: {piece.PieceType} at {row}, {col} is attacking King at {pieceRow}, {pieceCol}");
                             return true;
+                        }
+                        else
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Piece: {piece.PieceType} at {row}, {col} is not attacking King at {pieceRow}, {pieceCol}");
                         }
                     }
                 }

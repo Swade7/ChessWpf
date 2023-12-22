@@ -68,7 +68,7 @@ namespace ChessWpf.Models.Pieces
                     {
                         if (board[move.FromRow + (i - move.FromCol), i].Player != Player.None)
                         {
-                            System.Diagnostics.Debug.WriteLine($"Piece: {board[move.FromRow + (i - move.FromCol), i].PieceType.ToString()}" +
+                            System.Diagnostics.Debug.WriteLine($"Piece: {board[move.FromRow + (i - move.FromCol), i].PieceType}" +
                                 $" blocking path at: {i}, {move.FromRow + (i - move.FromCol)}");
                             return false;
                         }

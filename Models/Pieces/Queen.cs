@@ -19,7 +19,7 @@ namespace ChessWpf.Models.Pieces
             return new Queen(Player);
         }
 
-        private bool CheckValidStraightMove(Move move, Piece[,] board, Player currentPlayer, Move? lastMove)
+        private bool CheckValidStraightMove(Move move, Piece[,] board)
         {
             // Check if trying to move diagonally
             if (move.FromCol != move.ToCol && move.FromRow != move.ToRow)
@@ -28,7 +28,7 @@ namespace ChessWpf.Models.Pieces
             }
 
             // Get the direction of the move
-            char direction = ' ';
+            char direction;
             if (move.FromCol == move.ToCol)
             {
                 direction = 'v';
@@ -46,7 +46,7 @@ namespace ChessWpf.Models.Pieces
                 {
                     for (int i = move.FromRow - 1; i > move.ToRow; i--)
                     {
-                        if (board[move.FromCol, i].Player != Player.None)
+                        if (board[i, move.FromCol].Player != Player.None)
                         {
                             return false;
                         }
@@ -57,7 +57,7 @@ namespace ChessWpf.Models.Pieces
                 {
                     for (int i = move.FromRow + 1; i < move.ToRow; i++)
                     {
-                        if (board[move.FromCol, i].Player != Player.None)
+                        if (board[i, move.FromCol].Player != Player.None)
                         {
                             return false;
                         }
@@ -72,7 +72,7 @@ namespace ChessWpf.Models.Pieces
                 {
                     for (int i = move.FromCol - 1; i > move.ToCol; i--)
                     {
-                        if (board[i, move.FromRow].Player != Player.None)
+                        if (board[move.FromRow, i].Player != Player.None)
                         {
                             return false;
                         }
@@ -83,7 +83,7 @@ namespace ChessWpf.Models.Pieces
                 {
                     for (int i = move.FromCol + 1; i < move.ToCol; i++)
                     {
-                        if (board[i, move.FromRow].Player != Player.None)
+                        if (board[move.FromRow, i].Player != Player.None)
                         {
                             return false;
                         }
@@ -94,7 +94,7 @@ namespace ChessWpf.Models.Pieces
             return true;
         }
 
-        private bool CheckValidDiagonalMove(Move move, Piece[,] board, Player currentPlayer, Move? lastMove)
+        private bool CheckValidDiagonalMove(Move move, Piece[,] board)
         {
             // Check if the move is diagonal
             int rowDifference = Math.Abs(move.ToRow - move.FromRow);
@@ -112,7 +112,7 @@ namespace ChessWpf.Models.Pieces
                 {
                     for (int i = move.FromCol + 1; i < move.ToCol; i++)
                     {
-                        if (board[i, move.FromRow + (i - move.FromCol)].Player != Player.None)
+                        if (board[move.FromRow + (i - move.FromCol), i].Player != Player.None)
                         {
                             return false;
                         }
@@ -123,7 +123,7 @@ namespace ChessWpf.Models.Pieces
                 {
                     for (int i = move.FromCol + 1; i < move.ToCol; i++)
                     {
-                        if (board[i, move.FromRow - (i - move.FromCol)].Player != Player.None)
+                        if (board[move.FromRow - (i - move.FromCol), i].Player != Player.None)
                         {
                             return false;
                         }
@@ -137,8 +137,11 @@ namespace ChessWpf.Models.Pieces
                 {
                     for (int i = move.ToCol + 1; i < move.FromCol; i++)
                     {
-                        if (board[i, move.ToRow - (i - move.FromRow)].Player != Player.None)
+                        System.Diagnostics.Debug.WriteLine($"Checking: {move.ToRow - (i - move.FromRow)}, {i}");
+                        if (board[move.ToRow - (i - move.ToCol), i].Player != Player.None)
                         {
+                            System.Diagnostics.Debug.WriteLine($"Piece: {board[move.ToRow - (i - move.FromRow), i].PieceType.ToString()}" +
+                                                               $" blocking path at: {move.ToRow - (i - move.FromRow)} , {i}");
                             return false;
                         }
                     }
@@ -148,7 +151,7 @@ namespace ChessWpf.Models.Pieces
                 {
                     for (int i = move.ToCol + 1; i < move.FromCol; i++)
                     {
-                        if (board[i, move.ToRow + (i - move.ToCol)].Player != Player.None)
+                        if (board[move.ToRow + (i - move.ToCol), i].Player != Player.None)
                         {
                             return false;
                         }
@@ -186,7 +189,7 @@ namespace ChessWpf.Models.Pieces
             }
 
 
-            return CheckValidStraightMove(move, board, currentPlayer, lastMove) || CheckValidDiagonalMove(move, board, currentPlayer, lastMove);
+            return CheckValidStraightMove(move, board) || CheckValidDiagonalMove(move, board);
         }
 
         public override void UpdatePiece() {}

@@ -66,7 +66,7 @@ namespace ChessWpf.Models.Pieces
                 {
                     for (int i = move.FromRow + 1; i < move.ToRow; i++)
                     {
-                        if (board[move.FromCol, i].Player != Player.None)
+                        if (board[i, move.FromCol].Player != Player.None)
                         {
                             return false;
                         }
@@ -77,7 +77,7 @@ namespace ChessWpf.Models.Pieces
                 {
                     for (int i = move.FromRow - 1; i > move.ToRow; i--)
                     {
-                        if (board[move.FromCol, i].Player != Player.None)
+                        if (board[i, move.FromCol].Player != Player.None)
                         {
                             return false;
                         }
@@ -91,7 +91,7 @@ namespace ChessWpf.Models.Pieces
                 {
                     for (int i = move.FromCol + 1; i < move.ToCol; i++)
                     {
-                        if (board[i, move.FromRow].Player != Player.None)
+                        if (board[move.FromRow, i].Player != Player.None)
                         {
                             return false;
                         }
@@ -102,12 +102,17 @@ namespace ChessWpf.Models.Pieces
                 {
                     for (int i = move.FromCol - 1; i > move.ToCol; i--)
                     {
-                        if (board[i, move.FromRow].Player != Player.None)
+                        if (board[move.FromRow, i].Player != Player.None)
                         {
                             return false;
                         }
                     }
                 }
+            }
+            // Not moving in a straight line
+            else
+            {
+                return false;
             }
 
             return true;

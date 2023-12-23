@@ -55,6 +55,7 @@ namespace ChessWpf.Models
         public const int BOARD_SIZE = 8;
         private const int WHITE_ROW = 0;
         private const int BLACK_ROW = BOARD_SIZE - 1;
+        private const int MAX_MOVES_SINCE_PAWN_MOVED_OR_PIECE_CAPTURED = 50;
 
         Player currentPlayer;
         List<Move> moves;
@@ -408,7 +409,7 @@ namespace ChessWpf.Models
 
         public bool IsStalemate()
         {
-            return (!Check() && PossibleMoves.Count == 0) || movesSincePawnMovedOrPieceCaptured < 50;
+            return (!Check() && PossibleMoves.Count == 0) || movesSincePawnMovedOrPieceCaptured < MAX_MOVES_SINCE_PAWN_MOVED_OR_PIECE_CAPTURED;
         }
 
         public bool WouldBeCheck(Move move)
@@ -550,6 +551,7 @@ namespace ChessWpf.Models
                 BlackKingLocation = kingLocation;
             }
         }
+
         private void UpdateBoard(Move move)
         {
             if (board[move.ToRow, move.ToCol].PieceType != PieceType.Empty)

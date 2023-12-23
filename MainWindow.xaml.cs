@@ -24,6 +24,8 @@ namespace ChessWpf
     {
         private Chess game;
 
+        Status gameStatus;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -32,6 +34,8 @@ namespace ChessWpf
 
             CreateBoard();
             DrawPieces();
+
+            gameStatus = Status.Active;
         }
 
         private void CreateBoard()
@@ -109,6 +113,28 @@ namespace ChessWpf
         }
 
 
+        private void UpdateStatus()
+        {
+            gameStatus = game.UpdateStatus();
+
+            if (gameStatus == Status.WhiteWin)
+            {
+                MessageBox.Show("Checkmate! " + game.CurrentPlayer.ToString() + " wins!");
+            }
+            else if (gameStatus == Status.BlackWin)
+            {
+                MessageBox.Show("Checkmate! " + game.CurrentPlayer.ToString() + " wins!");
+            }
+            else if (gameStatus == Status.Stalemate)
+            {
+                MessageBox.Show("Stalemate!");
+            }
+            else if (gameStatus == Status.GameOver)
+            {
+                MessageBox.Show("Game over!");
+            }
+        }
+
         private void boardCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Point mousePos = e.GetPosition(boardCanvas);
@@ -138,6 +164,7 @@ namespace ChessWpf
                     DrawPieces();
 
                     game.SelectedLocation = new Point(-1, -1);
+
                 }
                 else
                 {
@@ -148,9 +175,10 @@ namespace ChessWpf
                     else
                     {
                         game.SelectedLocation = new Point(-1, -1);
-                    }
-                    
+                    } 
                 }
+
+                UpdateStatus();
             }
         }
     }

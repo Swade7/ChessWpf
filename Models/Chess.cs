@@ -339,11 +339,13 @@ namespace ChessWpf.Models
 
         public Status UpdateStatus()
         {
+            /*
             if (IsStalemate())
             {
                 return Status.Stalemate;
             }
-            else if (Checkmate())
+            */
+            if (Checkmate())
             {
                 if (currentPlayer == Player.White)
                 {
@@ -354,6 +356,7 @@ namespace ChessWpf.Models
                     return Status.WhiteWin;
                 }
             }
+            
 
             return Status.Active;
         }

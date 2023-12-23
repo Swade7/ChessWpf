@@ -117,22 +117,39 @@ namespace ChessWpf
         {
             gameStatus = game.UpdateStatus();
 
-            if (gameStatus == Status.WhiteWin)
+            if (gameStatus != Status.Active)
             {
-                MessageBox.Show("Checkmate! " + game.CurrentPlayer.ToString() + " wins!");
+                if (gameStatus == Status.WhiteWin)
+                {
+                    MessageBox.Show("Checkmate! " + game.CurrentPlayer.ToString() + " wins!");
+                }
+                else if (gameStatus == Status.BlackWin)
+                {
+                    MessageBox.Show("Checkmate! " + game.CurrentPlayer.ToString() + " wins!");
+                }
+                else if (gameStatus == Status.Stalemate)
+                {
+                    MessageBox.Show("Stalemate!");
+                }
+                else if (gameStatus == Status.GameOver)
+                {
+                    MessageBox.Show("Game over!");
+                }
+
+                // Unregister the event handler
+                foreach (UIElement element in boardCanvas.Children)
+                {
+                    if (element is Rectangle)
+                    {
+                        (element as Rectangle).MouseLeftButtonDown -= boardCanvas_MouseLeftButtonDown;
+                    }
+                    else if (element is Image)
+                    {
+                        (element as Image).MouseLeftButtonDown -= boardCanvas_MouseLeftButtonDown;
+                    }
+                }
             }
-            else if (gameStatus == Status.BlackWin)
-            {
-                MessageBox.Show("Checkmate! " + game.CurrentPlayer.ToString() + " wins!");
-            }
-            else if (gameStatus == Status.Stalemate)
-            {
-                MessageBox.Show("Stalemate!");
-            }
-            else if (gameStatus == Status.GameOver)
-            {
-                MessageBox.Show("Game over!");
-            }
+            
         }
 
         private void boardCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -179,6 +196,7 @@ namespace ChessWpf
                 }
 
                 UpdateStatus();
+
             }
         }
     }

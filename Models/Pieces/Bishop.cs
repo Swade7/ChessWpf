@@ -42,7 +42,6 @@ namespace ChessWpf.Models.Pieces
             // Make sure they are actually moving
             else if (move.FromCol == move.ToCol && move.ToRow == move.FromRow)
             {
-                System.Diagnostics.Debug.WriteLine("Not moving");
                 return false;
             }
 
@@ -75,8 +74,6 @@ namespace ChessWpf.Models.Pieces
                     {
                         if (board[move.FromRow - (i - move.FromCol), i].Player != Player.None)
                         {
-                            System.Diagnostics.Debug.WriteLine($"Piece: {board[move.FromRow - (i - move.FromCol), i].PieceType.ToString()}" +
-                                $" blocking path at: {i}, {move.FromRow - (i - move.FromCol)}");
                             return false;
                         }
                     }
@@ -102,8 +99,6 @@ namespace ChessWpf.Models.Pieces
                     {
                         if (board[move.ToRow + (i - move.ToCol), i].Player != Player.None)
                         {
-                            System.Diagnostics.Debug.WriteLine($"Piece: {board[move.ToRow + (i - move.ToCol), i].PieceType.ToString()}" +
-                                $" blocking path at: {i}, {move.ToRow + (i - move.ToCol)}");
                             return false;
                         }
                     }

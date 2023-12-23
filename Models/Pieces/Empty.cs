@@ -26,7 +26,6 @@ namespace ChessWpf.Models.Pieces
 
         public override bool CheckValidMove(Move move, Piece[,] board, Player currentPlayer, Move? lastMove)
         {
-            System.Diagnostics.Debug.WriteLine("Empty piece trying to be moved");
             return false;
         }
 

@@ -310,7 +310,7 @@ namespace ChessWpf.Models
         public bool MakeMove(Move move)
         {
             Piece piece = GetPiece(move.FromRow, move.FromCol);
-
+            
             if (piece.CheckValidMove(move, board, currentPlayer, LastMove))
             {
                 if (!WouldBeCheck(move))
@@ -360,6 +360,7 @@ namespace ChessWpf.Models
                 Console.WriteLine("Invalid move.");
                 return false;
             }
+            
         }
 
         private Piece GetPiece(int row, int col)

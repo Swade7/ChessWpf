@@ -137,11 +137,8 @@ namespace ChessWpf.Models.Pieces
                 {
                     for (int i = move.ToCol + 1; i < move.FromCol; i++)
                     {
-                        System.Diagnostics.Debug.WriteLine($"Checking: {move.ToRow - (i - move.FromRow)}, {i}");
                         if (board[move.ToRow - (i - move.ToCol), i].Player != Player.None)
                         {
-                            System.Diagnostics.Debug.WriteLine($"Piece: {board[move.ToRow - (i - move.FromRow), i].PieceType.ToString()}" +
-                                                               $" blocking path at: {move.ToRow - (i - move.FromRow)} , {i}");
                             return false;
                         }
                     }

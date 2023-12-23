@@ -24,21 +24,18 @@ namespace ChessWpf.Models.Pieces
             // Check if the move is out of bounds
             if (move.ToRow > BOARD_SIZE - 1 || move.ToRow < 0 || move.ToCol > BOARD_SIZE - 1 || move.ToCol < 0)
             {
-                System.Diagnostics.Debug.WriteLine("Out of bounds");
                 return false;
             }
 
             // Check if the piece belongs to the current player
             if (board[move.FromRow, move.FromCol].Player != currentPlayer)
             {
-                System.Diagnostics.Debug.WriteLine("Not current player");
                 return false;
             }
 
             // Check if the space to be moved to is already occupied by the current player's piece
             if (board[move.ToRow, move.ToCol].Player == currentPlayer)
             {
-                System.Diagnostics.Debug.WriteLine("Already occupied by" + board[move.ToRow, move.ToCol].Player.ToString());
                 return false;
             }
 
@@ -55,7 +52,6 @@ namespace ChessWpf.Models.Pieces
 
             if (rowDifference != colDifference)
             {
-                System.Diagnostics.Debug.WriteLine("Not diagonal");
                 return false;
             }
 
@@ -68,8 +64,6 @@ namespace ChessWpf.Models.Pieces
                     {
                         if (board[move.FromRow + (i - move.FromCol), i].Player != Player.None)
                         {
-                            System.Diagnostics.Debug.WriteLine($"Piece: {board[move.FromRow + (i - move.FromCol), i].PieceType}" +
-                                $" blocking path at: {i}, {move.FromRow + (i - move.FromCol)}");
                             return false;
                         }
                     }

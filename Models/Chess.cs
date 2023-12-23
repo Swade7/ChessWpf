@@ -65,6 +65,8 @@ namespace ChessWpf.Models
         Point selectedLocation;
         List<Piece> whitePieces;
         List<Piece> blackPieces;
+        Point blackKingLocation;
+        Point whiteKingLocation;
 
         // Properties
 
@@ -191,6 +193,30 @@ namespace ChessWpf.Models
             }
         }
 
+        public Point BlackKingLocation
+        {
+            get
+            {
+                return blackKingLocation;
+            }
+            set
+            {
+                blackKingLocation = value;
+            }
+        }
+
+        public Point WhiteKingLocation
+        {
+            get
+            {
+                return whiteKingLocation;
+            }
+            set
+            {
+                whiteKingLocation = value;
+            }
+        }
+
 
         // Constructors
         public Chess()
@@ -209,6 +235,8 @@ namespace ChessWpf.Models
             whitePieces = rhs.whitePieces;
             blackPieces = rhs.blackPieces;
             selectedLocation = rhs.selectedLocation;
+            blackKingLocation = rhs.blackKingLocation;
+            whiteKingLocation = rhs.whiteKingLocation;
         }
 
         private void InitializeBoard()
@@ -245,6 +273,8 @@ namespace ChessWpf.Models
             // King
             board[WHITE_ROW, 4] = new King(Player.White);
             board[BLACK_ROW, 4] = new King(Player.Black);
+            WhiteKingLocation = new Point(WHITE_ROW, 4);
+            BlackKingLocation = new Point(BLACK_ROW, 4);
 
             // Add the pieces to the lists
             whitePieces = new List<Piece>();
@@ -280,13 +310,12 @@ namespace ChessWpf.Models
         {
             Piece piece = GetPiece(move.FromRow, move.FromCol);
             System.Diagnostics.Debug.WriteLine(piece.PieceType + " attempted to be moved");
-            PieceType pieceType = piece.PieceType;
 
             if (piece.CheckValidMove(move, board, currentPlayer, LastMove))
             {
                 if (!WouldBeCheck(move))
                 {
-                    if (pieceType == PieceType.King && Math.Abs(move.FromCol - move.ToCol) == 2)
+                    if (piece.PieceType == PieceType.King && Math.Abs(move.FromCol - move.ToCol) == 2)
                     {
                         // Check if the King would move through check
                         Piece[,] tempBoard = (Piece[,])board.Clone();
@@ -302,7 +331,7 @@ namespace ChessWpf.Models
                         }
                         Castle(move);
                     }
-                    else if (pieceType == PieceType.Pawn && Math.Abs(move.FromCol - move.ToCol) == 2)
+                    else if (piece.PieceType == PieceType.Pawn && Math.Abs(move.FromCol - move.ToCol) == 2)
                     {
                         EnPassant(move);
                     }
@@ -311,7 +340,7 @@ namespace ChessWpf.Models
                     piece.UpdatePiece();
                     moves.Add(move);
 
-                    if (pieceType == PieceType.Pawn && (move.ToRow == 0 || move.ToRow == BOARD_SIZE - 1))
+                    if (piece.PieceType == PieceType.Pawn && (move.ToRow == 0 || move.ToRow == BOARD_SIZE - 1))
                     {
                         PawnToQueen(move);
                     }
@@ -339,12 +368,12 @@ namespace ChessWpf.Models
 
         public Status UpdateStatus()
         {
-            /*
+            
             if (IsStalemate())
             {
                 return Status.Stalemate;
             }
-            */
+            
             if (Checkmate())
             {
                 if (currentPlayer == Player.White)
@@ -364,100 +393,23 @@ namespace ChessWpf.Models
         // Checks for check/checkmate/stalemate
         public bool Checkmate()
         {
-            if (Check())
-            {
-                // Get the king's location
-                int kingCol = -1;
-                int kingRow = -1;
-
-                for (int row = 0; row < BOARD_SIZE; row++)
-                {
-                    for (int col = 0; col < BOARD_SIZE; col++)
-                    {
-                        // Get the piece at the location
-                        Piece piece = GetPiece(row, col);
-                        if (piece.PieceType == PieceType.King && piece.Player == CurrentPlayer)
-                        {
-                            kingCol = col;
-                            kingRow = row;
-
-                            break;
-                        }
-                    }
-                    if (kingCol != -1 && kingRow != -1)
-                    {
-                        break;
-                    }
-                }
-
-                // Check if there are any possible moves that would put the player no longer in check
-                if (PossibleMoves.Count == 0)
-                {
-                    Console.WriteLine("Checkmate");
-                    return true;
-                }
-            }
-
-            return false;
+            return Check() && PossibleMoves.Count == 0;
         }
 
         public bool Check()
         {
             System.Diagnostics.Debug.WriteLine("Check() called");
-            // Declare variables for the king location
-            int kingCol = -1;
-            int kingRow = -1;
 
+            Point kingLocation = (currentPlayer == Player.White) ? WhiteKingLocation : BlackKingLocation;
 
-            // Locate the king
-            for (int row = 0; row < BOARD_SIZE; row++)
-            {
-                for (int col = 0; col < BOARD_SIZE; col++)
-                {
-                    // Get the piece at the location
-                    Piece piece = GetPiece(row, col);
-                    if (piece.PieceType == PieceType.King)
-                    {
-                        System.Diagnostics.Debug.WriteLine($"{piece.Player} King found at {row}, {col}");
-                    }
-                    else
-                    {
-                        System.Diagnostics.Debug.WriteLine($"{piece.Player} {piece.PieceType} found at {row}, {col}");
-                    }
-                    if (piece.PieceType == PieceType.King && piece.Player == currentPlayer)
-                    {
-                        kingCol = col;
-                        kingRow = row;
-
-                        break;
-                    }
-
-                }
-                if (kingCol != -1 && kingRow != -1)
-                {
-                    break;
-                }
-            }
-
-            return UnderAttack(kingRow, kingCol);
+            return UnderAttack((int)kingLocation.X, (int)kingLocation.Y);
         }
+
         public bool IsStalemate()
         {
-            if (!Check())
-            {
-                if (PossibleMoves.Count == 0)
-                {
-                    return true;
-                }
-            }
-
-            // Check if the number of moves since a pawn moved or a piece was captured is 50
-            if (movesSincePawnMovedOrPieceCaptured >= 50)
-            {
-                return true;
-            }
-            return false;
+            return (!Check() && PossibleMoves.Count == 0) || movesSincePawnMovedOrPieceCaptured < 50;
         }
+
         public bool WouldBeCheck(Move move)
         {
             // Create a copy of the game to test a move
@@ -558,17 +510,31 @@ namespace ChessWpf.Models
             // Update the piece and the board
             UpdateBoard(rookMove);
             rook.UpdatePiece();
+
+            // Update the king's location
+            if (CurrentPlayer == Player.White)
+            {
+                WhiteKingLocation = new Point(WHITE_ROW, rookMove.FromCol);
+            }
+            else if (CurrentPlayer == Player.Black)
+            {
+                BlackKingLocation = new Point(BLACK_ROW, rookMove.FromCol);
+            }
+            else
+            {
+                return;
+            }
         }
         private void EnPassant(Move move)
         {
-            // Get the location of the pawn being captured
+            // Capture the opposing pawn (set the location to Empty)
             if (currentPlayer == Player.White)
             {
-                board[move.ToRow + 1, move.ToCol] = new Empty();
+                board[move.ToRow + 1, move.ToCol] = Empty.Instance;
             }
             else if (currentPlayer == Player.Black)
             {
-                board[move.ToRow - 1, move.ToCol] = new Empty();
+                board[move.ToRow - 1, move.ToCol] = Empty.Instance;
             }
             else
             {
@@ -624,6 +590,19 @@ namespace ChessWpf.Models
 
             // Set the board to the new board
             board = newBoard;
+
+            // Update the king's location
+            if (board[move.ToRow, move.ToCol].PieceType == PieceType.King && Math.Abs(move.ToCol - move.FromCol) == 1)
+            {
+                if (currentPlayer == Player.White)
+                {
+                    WhiteKingLocation = new Point(move.ToRow, move.ToCol);
+                }
+                else if (currentPlayer == Player.Black)
+                {
+                    BlackKingLocation = new Point(move.ToRow, move.ToCol);
+                }
+            }
         }
     }
 }

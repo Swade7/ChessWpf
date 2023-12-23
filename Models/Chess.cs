@@ -346,6 +346,7 @@ namespace ChessWpf.Models
                     }
 
                     ChangeTurn();
+
                     return true;
                 }
                 else
@@ -428,8 +429,6 @@ namespace ChessWpf.Models
         public bool UnderAttack(int pieceRow, int pieceCol)
         {
             System.Diagnostics.Debug.WriteLine("UnderAttack() called");
-            // Get the opponent
-            Player opponent = Opponent;
 
             // Iterate through the rest of the board and check if the piece is under attack
             for (int row = 0; row < BOARD_SIZE; row++)
@@ -450,7 +449,7 @@ namespace ChessWpf.Models
                             ToCol = pieceCol
                         };
 
-                        if (piece.CheckValidMove(move, Board, opponent, LastMove))
+                        if (piece.CheckValidMove(move, Board, Opponent, LastMove))
                         {
                             System.Diagnostics.Debug.WriteLine($"Piece: {piece.PieceType} at {row}, {col} is attacking King at {pieceRow}, {pieceCol}");
                             return true;
@@ -462,6 +461,7 @@ namespace ChessWpf.Models
                     }
                 }
             }
+
             return false;
         }
 
@@ -512,18 +512,7 @@ namespace ChessWpf.Models
             rook.UpdatePiece();
 
             // Update the king's location
-            if (CurrentPlayer == Player.White)
-            {
-                WhiteKingLocation = new Point(WHITE_ROW, rookMove.FromCol);
-            }
-            else if (CurrentPlayer == Player.Black)
-            {
-                BlackKingLocation = new Point(BLACK_ROW, rookMove.FromCol);
-            }
-            else
-            {
-                return;
-            }
+            UpdateKingLocation(new Point(rookMove.FromRow, rookMove.FromCol));
         }
         private void EnPassant(Move move)
         {
@@ -548,6 +537,18 @@ namespace ChessWpf.Models
         private void ChangeTurn()
         {
             currentPlayer = (currentPlayer == Player.White) ? Player.Black : Player.White;
+        }
+
+        private void UpdateKingLocation(Point kingLocation)
+        {
+            if (currentPlayer == Player.White)
+            {
+                WhiteKingLocation = kingLocation;
+            }
+            else if (currentPlayer == Player.Black)
+            {
+                BlackKingLocation = kingLocation;
+            }
         }
         private void UpdateBoard(Move move)
         {
@@ -594,14 +595,7 @@ namespace ChessWpf.Models
             // Update the king's location
             if (board[move.ToRow, move.ToCol].PieceType == PieceType.King && Math.Abs(move.ToCol - move.FromCol) == 1)
             {
-                if (currentPlayer == Player.White)
-                {
-                    WhiteKingLocation = new Point(move.ToRow, move.ToCol);
-                }
-                else if (currentPlayer == Player.Black)
-                {
-                    BlackKingLocation = new Point(move.ToRow, move.ToCol);
-                }
+                UpdateKingLocation(new Point(move.ToRow, move.ToCol));
             }
         }
     }

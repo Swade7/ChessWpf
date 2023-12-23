@@ -310,7 +310,6 @@ namespace ChessWpf.Models
         public bool MakeMove(Move move)
         {
             Piece piece = GetPiece(move.FromRow, move.FromCol);
-            System.Diagnostics.Debug.WriteLine(piece.PieceType + " attempted to be moved");
 
             if (piece.CheckValidMove(move, board, currentPlayer, LastMove))
             {
@@ -400,8 +399,6 @@ namespace ChessWpf.Models
 
         public bool Check()
         {
-            System.Diagnostics.Debug.WriteLine("Check() called");
-
             Point kingLocation = (currentPlayer == Player.White) ? WhiteKingLocation : BlackKingLocation;
 
             return UnderAttack((int)kingLocation.X, (int)kingLocation.Y);
@@ -409,7 +406,7 @@ namespace ChessWpf.Models
 
         public bool IsStalemate()
         {
-            return (!Check() && PossibleMoves.Count == 0) || movesSincePawnMovedOrPieceCaptured < MAX_MOVES_SINCE_PAWN_MOVED_OR_PIECE_CAPTURED;
+            return (!Check() && PossibleMoves.Count == 0) || movesSincePawnMovedOrPieceCaptured > MAX_MOVES_SINCE_PAWN_MOVED_OR_PIECE_CAPTURED;
         }
 
         public bool WouldBeCheck(Move move)
@@ -452,12 +449,7 @@ namespace ChessWpf.Models
 
                         if (piece.CheckValidMove(move, Board, Opponent, LastMove))
                         {
-                            System.Diagnostics.Debug.WriteLine($"Piece: {piece.PieceType} at {row}, {col} is attacking King at {pieceRow}, {pieceCol}");
                             return true;
-                        }
-                        else
-                        {
-                            System.Diagnostics.Debug.WriteLine($"Piece: {piece.PieceType} at {row}, {col} is not attacking King at {pieceRow}, {pieceCol}");
                         }
                     }
                 }

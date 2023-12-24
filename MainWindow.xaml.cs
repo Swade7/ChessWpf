@@ -109,9 +109,7 @@ namespace ChessWpf
                     }
                 }
             }
-            System.Diagnostics.Debug.WriteLine(game.Board[3, 3].GetType());
         }
-
 
         private void UpdateStatus()
         {
@@ -151,6 +149,56 @@ namespace ChessWpf
             }           
         }
 
+        private Rectangle GetRectangleAt(int row, int col)
+        {
+            int elementIndex = row * game.BoardSize + col;
+            return boardCanvas.Children.OfType<Rectangle>().ElementAt(elementIndex);
+        }
+
+        private void SelectPiece(Point location)
+        {
+            Rectangle rect = GetRectangleAt((int)location.X, (int)location.Y);
+            HighlightRectangle(rect, ((SolidColorBrush)rect.Fill).Color, Colors.Gold);
+        }
+
+        private void HighlightPossibleMoves()
+        {
+            List<Move> possibleMoves = game.PossibleMoves;
+            foreach (Move move in possibleMoves)
+            {
+                if (move.FromCol == game.SelectedLocation.Y && move.FromRow == game.SelectedLocation.X)
+                {
+                    Rectangle rect = GetRectangleAt(move.ToRow, move.ToCol);
+                    HighlightRectangle(rect, ((SolidColorBrush)rect.Fill).Color, Colors.Yellow);
+                }
+            }
+        }
+
+        private void HighlightRectangle(Rectangle rect, Color originalColor, Color tintColor)
+        {
+            // Combine the original color and tint color with some opacity for the tint
+            Color mixedColor = Color.Multiply(originalColor, (float)0.3) + Color.Multiply(tintColor, (float)0.7);
+
+            // Create a new SolidColorBrush with the mixed color
+            SolidColorBrush mixedColorBrush = new SolidColorBrush(mixedColor);
+
+            // Set the mixedColorBrush as the Fill property of the rectangle
+            rect.Fill = mixedColorBrush;
+        }
+
+
+        private void DeselectAllPieces()
+        {
+            for (int row = 0; row < game.BoardSize; row++)
+            {
+                for (int col = 0; col < game.BoardSize; col++)
+                {
+                    Rectangle element = GetRectangleAt(row, col);
+                    element.Fill = (row + col) % 2 == 0 ? Brushes.AntiqueWhite : Brushes.DarkOliveGreen;
+                }
+            }
+        }
+
         private void boardCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Point mousePos = e.GetPosition(boardCanvas);
@@ -162,6 +210,10 @@ namespace ChessWpf
             {
                 game.SelectedLocation = new Point(row, col);
                 System.Diagnostics.Debug.WriteLine("Selected " + game.Board[row, col].Player + game.Board[row, col].GetType().Name + " at row " + row + " col " + col);
+
+                // Highlight the selected piece
+                SelectPiece(game.SelectedLocation);
+                HighlightPossibleMoves();
             }
             else
             {
@@ -172,30 +224,33 @@ namespace ChessWpf
                     FromRow = (int)game.SelectedLocation.X,
                     ToCol = col,
                     ToRow = row };
-                bool moveSuccess = game.MakeMove(move);
-                if (moveSuccess)
+                if (game.PossibleMoves.Contains(move))
                 {
+                    game.MakeMove(move);
                     System.Diagnostics.Debug.WriteLine("Move successful");
                     // Update the UI
                     DrawPieces();
 
                     game.SelectedLocation = new Point(-1, -1);
-
+                    UpdateStatus();
+                    DeselectAllPieces();
                 }
+                
                 else
                 {
+                    DeselectAllPieces();
                     if (game.Board[row, col].Player == game.CurrentPlayer)
                     {
                         game.SelectedLocation = new Point(row, col);
+                        SelectPiece(game.SelectedLocation);
+                        HighlightPossibleMoves();
+                    
                     }
                     else
                     {
                         game.SelectedLocation = new Point(-1, -1);
                     } 
-                }
-
-                UpdateStatus();
-
+                }             
             }
         }
 
@@ -204,6 +259,7 @@ namespace ChessWpf
             game = new Chess();
 
             DrawPieces();
+            gameStatus = Status.Active;
         }
     }
 }

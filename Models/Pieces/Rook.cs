@@ -11,20 +11,22 @@ namespace ChessWpf.Models.Pieces
     {
         public const int BOARD_SIZE = 8;
 
-        private bool hasMoved;
+        private bool hasMoved = false;
 
         public bool HasMoved
         {
-            get { return HasMoved; }
+            get { return hasMoved; }
             private set
             {
-                if (hasMoved == true)
+                if (hasMoved != true)
                     hasMoved = value;
             }
         }
 
         // Constructor
-        public Rook(Player player) : base(PieceType.Rook, player) { }
+        public Rook(Player player) : base(PieceType.Rook, player) { 
+            hasMoved = false;
+        }
 
         // Copy
         public override Piece Clone()

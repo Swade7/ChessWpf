@@ -71,6 +71,7 @@ namespace ChessWpf.Models.Pieces
                     {
                         return false;
                     }
+                    
 
                     // Check if the path is clear
                     for (int i = Math.Min(move.FromCol, move.ToCol) + 1; i < Math.Max(move.FromCol, move.ToCol); i++)

@@ -419,7 +419,7 @@ namespace ChessWpf.Models
 
             // Update the board	
             chessCopy.UpdateBoard(move);
-            piece.UpdatePiece();
+            //piece.UpdatePiece();
 
             // Return if the user would be in check as a result of the move
             return chessCopy.Check();

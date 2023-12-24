@@ -148,8 +148,7 @@ namespace ChessWpf
                         (element as Image).MouseLeftButtonDown -= boardCanvas_MouseLeftButtonDown;
                     }
                 }
-            }
-            
+            }           
         }
 
         private void boardCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -198,6 +197,13 @@ namespace ChessWpf
                 UpdateStatus();
 
             }
+        }
+
+        private void newGame_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            game = new Chess();
+
+            DrawPieces();
         }
     }
 }

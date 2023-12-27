@@ -118,13 +118,9 @@ namespace ChessWpf
 
             if (gameStatus != Status.Active)
             {
-                if (gameStatus == Status.WhiteWin)
+                if (gameStatus == Status.WhiteWin || gameStatus == Status.BlackWin)
                 {
-                    MessageBox.Show("Checkmate! " + game.CurrentPlayer.ToString() + " wins!");
-                }
-                else if (gameStatus == Status.BlackWin)
-                {
-                    MessageBox.Show("Checkmate! " + game.CurrentPlayer.ToString() + " wins!");
+                    MessageBox.Show("Checkmate! " + game.Opponent.ToString() + " wins!");
                 }
                 else if (gameStatus == Status.Stalemate)
                 {

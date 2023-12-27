@@ -200,6 +200,26 @@ namespace ChessWpf
             }
         }
 
+        private bool MakeMove(Move move)
+        {
+            if (game.PossibleMoves.Contains(move))
+            {
+                game.MakeMove(move);
+
+                // Update the UI
+                DrawPieces();
+
+                game.SelectedLocation = new Point(-1, -1);
+                UpdateStatus();
+                DeselectAllPieces();
+                currentPlayerLabel.Content = $"{game.CurrentPlayer}'s turn";
+
+                return true;
+            }
+
+            return false;
+        }
+
         private void boardCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Point mousePos = e.GetPosition(boardCanvas);
@@ -219,25 +239,19 @@ namespace ChessWpf
             else
             {
                 System.Diagnostics.Debug.WriteLine("Moving " + game.Board[(int)game.SelectedLocation.X, (int)game.SelectedLocation.Y].Player + game.Board[(int)game.SelectedLocation.X, (int)game.SelectedLocation.Y].GetType().Name + " from row " + game.SelectedLocation.X + " col " + game.SelectedLocation.Y + " to row " + row + " col " + col);
-                Move move = new Move 
+                Move move = new Move
                 {
                     FromCol = (int)game.SelectedLocation.Y,
                     FromRow = (int)game.SelectedLocation.X,
                     ToCol = col,
-                    ToRow = row };
-                if (game.PossibleMoves.Contains(move))
-                {
-                    game.MakeMove(move);
-                    System.Diagnostics.Debug.WriteLine("Move successful");
-                    // Update the UI
-                    DrawPieces();
-
-                    game.SelectedLocation = new Point(-1, -1);
-                    UpdateStatus();
-                    DeselectAllPieces();
-                    currentPlayerLabel.Content = $"{game.CurrentPlayer}'s turn";
-                }
+                    ToRow = row
+                };
                 
+                // Make the move if valid
+                if (MakeMove(move))
+                {
+                    return;
+                }
                 else
                 {
                     DeselectAllPieces();

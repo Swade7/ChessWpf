@@ -62,7 +62,7 @@ namespace ChessWpf.Models.Pieces
             int maxMoveDistance = hasMoved ? 1 : 2;
 
             // Prevent the pawn from moving more than the max distance
-            if (Math.Abs(rowDifference) > maxMoveDistance)
+            if (Math.Abs(rowDifference) > maxMoveDistance || (Math.Abs(rowDifference) != 1 && move.FromRow != startRow))
             {
                 return false;
             }

@@ -5,10 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ChessWpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="550" Width="800"
+        MinWidth="450"
+        MinHeight="475">
     <Grid>
+
+        <Label x:Name="currentPlayerLabel" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"/>
         <Viewbox Stretch="Uniform">
-            <Canvas x:Name="boardCanvas" Width="400" Height="425" HorizontalAlignment="Center" VerticalAlignment="Top"></Canvas>
+            <Canvas x:Name="boardCanvas" Width="400" Height="400" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="40"></Canvas>
         </Viewbox>
         <Button x:Name="newGame_Btn" Content="New Game" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="75" Click="newGame_Btn_Click"/>
         

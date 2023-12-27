@@ -36,6 +36,7 @@ namespace ChessWpf
             DrawPieces();
 
             gameStatus = Status.Active;
+            currentPlayerLabel.Content = $"{game.CurrentPlayer}'s turn";
         }
 
         private void CreateBoard()
@@ -234,6 +235,7 @@ namespace ChessWpf
                     game.SelectedLocation = new Point(-1, -1);
                     UpdateStatus();
                     DeselectAllPieces();
+                    currentPlayerLabel.Content = $"{game.CurrentPlayer}'s turn";
                 }
                 
                 else

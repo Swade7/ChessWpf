@@ -274,8 +274,11 @@ namespace ChessWpf
         {
             game = new Chess();
 
+            DeselectAllPieces();
             DrawPieces();
+
             gameStatus = Status.Active;
+            currentPlayerLabel.Content = $"{game.CurrentPlayer}'s turn";
         }
     }
 }

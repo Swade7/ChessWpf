@@ -160,14 +160,10 @@ namespace ChessWpf
 
         private void HighlightPossibleMoves()
         {
-            List<Move> possibleMoves = game.PossibleMoves;
-            foreach (Move move in possibleMoves)
+            foreach (Move move in game.PossibleMovesForSelectedPiece)
             {
-                if (move.FromCol == game.SelectedLocation.Y && move.FromRow == game.SelectedLocation.X)
-                {
-                    Rectangle rect = GetRectangleAt(move.ToRow, move.ToCol);
-                    HighlightRectangle(rect, ((SolidColorBrush)rect.Fill).Color, Colors.Yellow);
-                }
+                Rectangle rect = GetRectangleAt(move.ToRow, move.ToCol);
+                HighlightRectangle(rect, ((SolidColorBrush)rect.Fill).Color, Colors.Yellow);
             }
         }
 
@@ -175,11 +171,8 @@ namespace ChessWpf
         {
             // Combine the original color and tint color with some opacity for the tint
             Color mixedColor = Color.Multiply(originalColor, (float)0.3) + Color.Multiply(tintColor, (float)0.7);
-
-            // Create a new SolidColorBrush with the mixed color
             SolidColorBrush mixedColorBrush = new SolidColorBrush(mixedColor);
 
-            // Set the mixedColorBrush as the Fill property of the rectangle
             rect.Fill = mixedColorBrush;
         }
 
@@ -198,7 +191,8 @@ namespace ChessWpf
 
         private bool MakeMove(Move move)
         {
-            if (game.PossibleMoves.Contains(move))
+            //if (game.PossibleMoves.Contains(move))
+            if (game.PossibleMovesForSelectedPiece.Contains(move))
             {
                 game.MakeMove(move);
 

@@ -5,6 +5,7 @@ using System.ComponentModel.Design;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Numerics;
+using System.Runtime.Remoting.Channels;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -166,6 +167,36 @@ namespace ChessWpf.Models
             }
         }
 
+        public List<Move> PossibleMovesForSelectedPiece
+        {
+            get
+            {
+                // Create a list to store the possible moves
+                List<Move> moves = new List<Move>();
+
+                // Iterate over the board to find the Piece that belong to the currentPlayer
+                for (int toRow = 0; toRow < BOARD_SIZE; toRow++)
+                {
+                    for (int toCol = 0; toCol < BOARD_SIZE; toCol++)
+                    {
+                        Move move = new Move
+                        {
+                            FromCol = (int)selectedLocation.Y,
+                            FromRow = (int)selectedLocation.X,
+                            ToCol = toCol,
+                            ToRow = toRow
+                        };
+                        if (board[(int)selectedLocation.X, (int)selectedLocation.Y].CheckValidMove(move, Board, CurrentPlayer, LastMove) && !WouldBeCheck(move))
+                        {
+                            moves.Add(move);
+                        }
+                    }
+                }
+
+                return moves;
+            }
+        }
+
         public int NumMoves
         {
             get
@@ -311,10 +342,10 @@ namespace ChessWpf.Models
         {
             Piece piece = GetPiece(move.FromRow, move.FromCol);
             
-            if (piece.CheckValidMove(move, board, currentPlayer, LastMove))
-            {
-                if (!WouldBeCheck(move))
-                {
+            //if (piece.CheckValidMove(move, board, currentPlayer, LastMove))
+            //{
+              //  if (!WouldBeCheck(move))
+                //{
                     if (piece.PieceType == PieceType.King && Math.Abs(move.FromCol - move.ToCol) == 2)
                     {
                         // Check if the King would move through check
@@ -348,6 +379,7 @@ namespace ChessWpf.Models
                     ChangeTurn();
 
                     return true;
+            /*
                 }
                 else
                 {
@@ -360,6 +392,7 @@ namespace ChessWpf.Models
                 Console.WriteLine("Invalid move.");
                 return false;
             }
+            */
             
         }
 
@@ -413,12 +446,30 @@ namespace ChessWpf.Models
         public bool WouldBeCheck(Move move)
         {
             // Create a copy of the game to test a move
-            Chess chessCopy = new Chess(this);
+            //Chess chessCopy = new Chess(this);
 
-            Piece piece = chessCopy.GetPiece(move.FromRow, move.FromCol);
+            Chess chessCopy = new Chess
+            {
+                board = (Piece[,])board.Clone(),
+                currentPlayer = currentPlayer,
+                hasWhiteCastled = hasWhiteCastled,
+                hasBlackCastled = hasBlackCastled,
+                moves = new List<Move>(moves),
+                movesSincePawnMovedOrPieceCaptured = movesSincePawnMovedOrPieceCaptured,
+                whitePieces = new List<Piece>(whitePieces),
+                blackPieces = new List<Piece>(blackPieces),
+                selectedLocation = selectedLocation,
+                blackKingLocation = blackKingLocation,
+                whiteKingLocation = whiteKingLocation            
+            };
+
+            chessCopy.UpdateBoard(move);
+
+            //Piece piece = chessCopy.GetPiece(move.FromRow, move.FromCol);
 
             // Update the board	
-            chessCopy.UpdateBoard(move);
+            //chessCopy.UpdateBoard(move);
+
             //piece.UpdatePiece();
 
             // Return if the user would be in check as a result of the move

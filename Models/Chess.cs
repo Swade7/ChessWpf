@@ -432,31 +432,8 @@ namespace ChessWpf.Models
         public bool WouldBeCheck(Move move)
         {
             // Create a copy of the game to test a move
-            //Chess chessCopy = new Chess(this);
-
-            Chess chessCopy = new Chess
-            {
-                board = (Piece[,])board.Clone(),
-                currentPlayer = currentPlayer,
-                hasWhiteCastled = hasWhiteCastled,
-                hasBlackCastled = hasBlackCastled,
-                moves = new List<Move>(moves),
-                movesSincePawnMovedOrPieceCaptured = movesSincePawnMovedOrPieceCaptured,
-                whitePieces = new List<Piece>(whitePieces),
-                blackPieces = new List<Piece>(blackPieces),
-                selectedLocation = selectedLocation,
-                blackKingLocation = blackKingLocation,
-                whiteKingLocation = whiteKingLocation            
-            };
-
+            Chess chessCopy = new Chess(this);
             chessCopy.UpdateBoard(move);
-
-            //Piece piece = chessCopy.GetPiece(move.FromRow, move.FromCol);
-
-            // Update the board	
-            //chessCopy.UpdateBoard(move);
-
-            //piece.UpdatePiece();
 
             // Return if the user would be in check as a result of the move
             return chessCopy.Check();

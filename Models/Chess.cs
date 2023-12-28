@@ -65,8 +65,8 @@ namespace ChessWpf.Models
         bool hasBlackCastled;
         Piece[,] board;
         Point selectedLocation;
-        List<Piece> whitePieces;
-        List<Piece> blackPieces;
+        List<Point> whitePieces;
+        List<Point> blackPieces;
         Point blackKingLocation;
         Point whiteKingLocation;
 
@@ -134,30 +134,26 @@ namespace ChessWpf.Models
                 // Create a list to store the possible moves
                 List<Move> moves = new List<Move>();
 
-                // Iterate over the board to find the Piece that belong to the currentPlayer
-                for (int row = 0; row < BOARD_SIZE; row++)
+                foreach (Point point in (currentPlayer == Player.White) ? whitePieces : blackPieces)
                 {
-                    for (int col = 0; col < BOARD_SIZE; col++)
+                    int row = (int)point.X;
+                    int col = (int)point.Y;
+
+                    // Check each possible "to" location
+                    for (int toRow = 0; toRow < BOARD_SIZE; toRow++)
                     {
-                        if (board[row, col].Player == CurrentPlayer)
+                        for (int toCol = 0; toCol < BOARD_SIZE; toCol++)
                         {
-                            // Check each possible "to" location
-                            for (int toRow = 0; toRow < BOARD_SIZE; toRow++)
+                            Move move = new Move
                             {
-                                for (int toCol = 0; toCol < BOARD_SIZE; toCol++)
-                                {
-                                    Move move = new Move
-                                    {
-                                        FromCol = col,
-                                        FromRow = row,
-                                        ToCol = toCol,
-                                        ToRow = toRow
-                                    };
-                                    if (board[row, col].CheckValidMove(move, Board, CurrentPlayer, LastMove) && !WouldBeCheck(move))
-                                    {
-                                        moves.Add(move);
-                                    }
-                                }
+                                FromCol = col,
+                                FromRow = row,
+                                ToCol = toCol,
+                                ToRow = toRow
+                            };
+                            if (board[row, col].CheckValidMove(move, Board, CurrentPlayer, LastMove) && !WouldBeCheck(move))
+                            {
+                                moves.Add(move);
                             }
                         }
                     }
@@ -211,17 +207,25 @@ namespace ChessWpf.Models
             set {  selectedLocation = value; }
         }
         
-        public List<Piece> BlackPieces {
+        public List<Point> BlackPieces {
             get
             {
                 return blackPieces;
             }
+            set 
+            {  
+                blackPieces = value;
+            }
         }
-        public List<Piece> WhitePieces 
+        public List<Point> WhitePieces 
         {
             get
             {
                 return whitePieces;
+            }
+            set
+            {
+                whitePieces = value;
             }
         }
 
@@ -309,14 +313,14 @@ namespace ChessWpf.Models
             BlackKingLocation = new Point(BLACK_ROW, 4);
 
             // Add the pieces to the lists
-            whitePieces = new List<Piece>();
-            blackPieces = new List<Piece>();
+            whitePieces = new List<Point>();
+            blackPieces = new List<Point>();
             for (int col = 0; col < BOARD_SIZE; col++)
             {
-                whitePieces.Add(board[WHITE_ROW, col]);
-                whitePieces.Add(board[WHITE_ROW + 1, col]);
-                blackPieces.Add(board[BLACK_ROW, col]);
-                blackPieces.Add(board[BLACK_ROW - 1, col]);
+                whitePieces.Add(new Point(WHITE_ROW, col));
+                whitePieces.Add(new Point(WHITE_ROW + 1, col));
+                blackPieces.Add(new Point(BLACK_ROW, col));
+                blackPieces.Add(new Point(BLACK_ROW - 1, col));
             }
 
             // Initialize the empty places
@@ -365,6 +369,7 @@ namespace ChessWpf.Models
                     EnPassant(move);
                 }
 
+                UpdatePlayerPieces(move);
                 UpdateBoard(move);
                 piece.UpdatePiece();
                 moves.Add(move);
@@ -380,6 +385,20 @@ namespace ChessWpf.Models
             }
 
             return false;
+        }
+
+        private void UpdatePlayerPieces(Move move)
+        {
+            List<Point> playerPieces = (currentPlayer == Player.White) ? whitePieces : blackPieces;
+            List<Point> opponentPieces = (currentPlayer == Player.White) ? blackPieces : whitePieces;
+
+            if (board[move.ToRow, move.ToCol].Player == Opponent)
+            {
+                opponentPieces.Remove(new Point(move.ToRow, move.ToCol));
+            }
+            playerPieces.Remove(new Point(move.FromRow, move.FromCol));
+            playerPieces.Add(new Point(move.ToRow, move.ToCol));
+
         }
 
         private Piece GetPiece(int row, int col)
@@ -414,7 +433,7 @@ namespace ChessWpf.Models
         // Checks for check/checkmate/stalemate
         public bool Checkmate()
         {
-            return Check() && PossibleMoves.Count == 0;
+            return PossibleMoves.Count == 0 && Check();
         }
 
         public bool Check()
@@ -426,7 +445,7 @@ namespace ChessWpf.Models
 
         public bool IsStalemate()
         {
-            return (!Check() && PossibleMoves.Count == 0) || movesSincePawnMovedOrPieceCaptured > MAX_MOVES_SINCE_PAWN_MOVED_OR_PIECE_CAPTURED;
+            return (PossibleMoves.Count == 0 && !Check()) || movesSincePawnMovedOrPieceCaptured > MAX_MOVES_SINCE_PAWN_MOVED_OR_PIECE_CAPTURED;
         }
 
         public bool WouldBeCheck(Move move)
@@ -443,30 +462,24 @@ namespace ChessWpf.Models
         {
             System.Diagnostics.Debug.WriteLine("UnderAttack() called");
 
-            // Iterate through the rest of the board and check if the piece is under attack
-            for (int row = 0; row < BOARD_SIZE; row++)
+            foreach (Point point in (currentPlayer == Player.White) ? blackPieces : whitePieces)
             {
-                for (int col = 0; col < BOARD_SIZE; col++)
+                // Create a Move variable for formatting
+                Move move = new Move
                 {
-                    // Get the piece at the location
-                    Piece piece = GetPiece(row, col);
+                    FromRow = (int)point.X,
+                    FromCol = (int)point.Y,
+                    ToRow = pieceRow,
+                    ToCol = pieceCol
+                };
 
-                    if (piece.Player == Opponent)
-                    {
-                        // Create a Move variable for formatting
-                        Move move = new Move
-                        {
-                            FromRow = row,
-                            FromCol = col,
-                            ToRow = pieceRow,
-                            ToCol = pieceCol
-                        };
+                // Get the piece at the location
+                Piece piece = GetPiece(move.FromRow, move.FromCol);
 
-                        if (piece.CheckValidMove(move, Board, Opponent, LastMove))
-                        {
-                            return true;
-                        }
-                    }
+                // Check if the piece can attack the location
+                if (piece.CheckValidMove(move, Board, Opponent, LastMove))
+                {
+                    return true;
                 }
             }
 

@@ -192,10 +192,8 @@ namespace ChessWpf
         private bool MakeMove(Move move)
         {
             //if (game.PossibleMoves.Contains(move))
-            if (game.PossibleMovesForSelectedPiece.Contains(move))
+            if (game.MakeMove(move))
             {
-                game.MakeMove(move);
-
                 // Update the UI
                 DrawPieces();
 

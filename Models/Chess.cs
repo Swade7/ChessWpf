@@ -342,58 +342,44 @@ namespace ChessWpf.Models
         {
             Piece piece = GetPiece(move.FromRow, move.FromCol);
             
-            //if (piece.CheckValidMove(move, board, currentPlayer, LastMove))
-            //{
-              //  if (!WouldBeCheck(move))
-                //{
-                    if (piece.PieceType == PieceType.King && Math.Abs(move.FromCol - move.ToCol) == 2)
-                    {
-                        // Check if the King would move through check
-                        Piece[,] tempBoard = (Piece[,])board.Clone();
-                        for (int i = Math.Min(move.FromCol, move.ToCol) + 1; i < Math.Max(move.FromCol, move.ToCol); i++)
-                        {
-                            tempBoard[move.FromRow, i] = new King(currentPlayer);
-                            tempBoard[move.FromRow, i - 1] = new Empty();
-                            if (UnderAttack(move.FromRow, i))
-                            {
-                                Console.WriteLine("UnderAttack returned true in MakeMove");
-                                return false;
-                            }
-                        }
-                        Castle(move);
-                    }
-                    else if (piece.PieceType == PieceType.Pawn && Math.Abs(move.FromCol - move.ToCol) == 2)
-                    {
-                        EnPassant(move);
-                    }
-
-                    UpdateBoard(move);
-                    piece.UpdatePiece();
-                    moves.Add(move);
-
-                    if (piece.PieceType == PieceType.Pawn && (move.ToRow == 0 || move.ToRow == BOARD_SIZE - 1))
-                    {
-                        PawnToQueen(move);
-                    }
-
-                    ChangeTurn();
-
-                    return true;
-            /*
-                }
-                else
-                {
-                    Console.WriteLine("The move would put you in check.");
-                    return false;
-                }
-            }
-            else
+            if (PossibleMovesForSelectedPiece.Contains(move))
             {
-                Console.WriteLine("Invalid move.");
-                return false;
+                if (piece.PieceType == PieceType.King && Math.Abs(move.FromCol - move.ToCol) == 2)
+                {
+                    // Check if the King would move through check
+                    Piece[,] tempBoard = (Piece[,])board.Clone();
+                    for (int i = Math.Min(move.FromCol, move.ToCol) + 1; i < Math.Max(move.FromCol, move.ToCol); i++)
+                    {
+                        tempBoard[move.FromRow, i] = new King(currentPlayer);
+                        tempBoard[move.FromRow, i - 1] = new Empty();
+                        if (UnderAttack(move.FromRow, i))
+                        {
+                            Console.WriteLine("UnderAttack returned true in MakeMove");
+                            return false;
+                        }
+                    }
+                    Castle(move);
+                }
+                else if (piece.PieceType == PieceType.Pawn && Math.Abs(move.FromCol - move.ToCol) == 2)
+                {
+                    EnPassant(move);
+                }
+
+                UpdateBoard(move);
+                piece.UpdatePiece();
+                moves.Add(move);
+
+                if (piece.PieceType == PieceType.Pawn && (move.ToRow == 0 || move.ToRow == BOARD_SIZE - 1))
+                {
+                    PawnToQueen(move);
+                }
+
+                ChangeTurn();
+
+                return true;
             }
-            */
-            
+
+            return false;
         }
 
         private Piece GetPiece(int row, int col)

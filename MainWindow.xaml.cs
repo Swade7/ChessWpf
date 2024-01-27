@@ -191,7 +191,6 @@ namespace ChessWpf
 
         private bool MakeMove(Move move)
         {
-            //if (game.PossibleMoves.Contains(move))
             if (game.MakeMove(move))
             {
                 // Update the UI
@@ -247,8 +246,7 @@ namespace ChessWpf
                     {
                         game.SelectedLocation = new Point(row, col);
                         SelectPiece(game.SelectedLocation);
-                        HighlightPossibleMoves();
-                    
+                        HighlightPossibleMoves();                    
                     }
                     else
                     {

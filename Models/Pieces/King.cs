@@ -29,10 +29,7 @@ namespace ChessWpf.Models.Pieces
         public override Piece Clone(Piece piece)
         {
             King oldKing = (King)piece;
-            return new King(Player, oldKing.HasMoved)
-            {
-                //hasMoved = oldKing.HasMoved
-            };
+            return new King(Player, oldKing.HasMoved){};
         }
 
         public override bool CheckValidMove(Move move, Piece[,] board, Player currentPlayer, Move? lastMove)

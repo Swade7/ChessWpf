@@ -73,7 +73,6 @@ namespace ChessWpf.Models
         Point whiteKingLocation;
 
         // Properties
-
         public int BoardSize
         {
             get
@@ -163,48 +162,7 @@ namespace ChessWpf.Models
 
                 return moves;
             }
-        }
-
-/*
-public List<Move> PossibleMoves
-    {
-        get
-        {
-            // Create a concurrent bag to store the possible moves safely
-            ConcurrentBag<Move> moves = new ConcurrentBag<Move>();
-
-            // Use Parallel.ForEach to iterate over the points in parallel
-            Parallel.ForEach((currentPlayer == Player.White) ? whitePieces : blackPieces, point =>
-            {
-                int row = (int)point.X;
-                int col = (int)point.Y;
-
-                // Check each possible "to" location
-                for (int toRow = 0; toRow < BOARD_SIZE; toRow++)
-                {
-                    for (int toCol = 0; toCol < BOARD_SIZE; toCol++)
-                    {
-                        Move move = new Move
-                        {
-                            FromCol = col,
-                            FromRow = row,
-                            ToCol = toCol,
-                            ToRow = toRow
-                        };
-                        if (board[row, col].CheckValidMove(move, Board, CurrentPlayer, LastMove) && !WouldBeCheck(move))
-                        {
-                            moves.Add(move);
-                        }
-                    }
-                }
-            });
-
-            // Convert the concurrent bag to a list before returning
-            return moves.ToList();
-        }
-    }
-*/       
-
+        }      
 
     public List<Move> PossibleMovesForSelectedPiece
         {
@@ -399,78 +357,6 @@ public List<Move> PossibleMoves
             selectedLocation = new Point(-1, -1);
         }
 
-        public Status PlayGame()
-        {
-            int moveCount = 0;
-            // Make a random move from the possible moves until the game is over
-            Status status = Status.Active;
-            while (status == Status.Active)
-            {
-                Random random = new Random();
-                List<Move> moves = PossibleMoves;
-                System.Console.WriteLine(moves.Count);
-                Move randomMove = moves[random.Next(moves.Count)];
-                SelectedLocation = new Point(randomMove.FromRow, randomMove.FromCol);
-                bool result = MakeMove(randomMove);
-
-                status = UpdateStatus();
-                moveCount++;
-                
-            }
-
-            // print the board with W for white, B for black, and E for empty and the corresponding letter for the piece
-            for (int row = 0; row < BOARD_SIZE; row++)
-            {
-                for (int col = 0; col < BOARD_SIZE; col++)
-                {
-                    Piece piece = board[row, col];
-                    if (piece.Player == Player.White)
-                    {
-                        Console.Write("W");
-                    }
-                    else if (piece.Player == Player.Black)
-                    {
-                        Console.Write("B");
-                    }
-                    else
-                    {
-                        Console.Write("E");
-                    }
-
-                    switch (piece.PieceType)
-                    {
-                        case PieceType.Pawn:
-                            Console.Write("P");
-                            break;
-                        case PieceType.Knight:
-                            Console.Write("N");
-                            break;
-                        case PieceType.Bishop:
-                            Console.Write("B");
-                            break;
-                        case PieceType.Rook:
-                            Console.Write("R");
-                            break;
-                        case PieceType.Queen:
-                            Console.Write("Q");
-                            break;
-                        case PieceType.King:
-                            Console.Write("K");
-                            break;
-                        default:
-                            Console.Write("E");
-                            break;
-                    }
-                    Console.Write(" ");
-                }
-                Console.WriteLine();
-            }
-                
-            
-
-            return status;
-        }
-
         public bool MakeMove(Move move)
         {
             Piece piece = GetPiece(move.FromRow, move.FromCol);
@@ -480,7 +366,7 @@ public List<Move> PossibleMoves
                 if (piece.PieceType == PieceType.King && Math.Abs(move.FromCol - move.ToCol) == 2)
                 {
                     King king = (King)piece;
-                    System.Diagnostics.Debug.WriteLine(king.HasMoved);
+
                     if (king.HasMoved)
                     {
                         return false;
@@ -538,7 +424,6 @@ public List<Move> PossibleMoves
             }
             playerPieces.Remove(new Point(move.FromRow, move.FromCol));
             playerPieces.Add(new Point(move.ToRow, move.ToCol));
-
         }
 
         private Piece GetPiece(int row, int col)
@@ -675,10 +560,6 @@ public List<Move> PossibleMoves
             {
                 board[move.ToRow - 1, move.ToCol] = Empty.Instance;
             }
-            else
-            {
-                return;
-            }
         }
         private void PawnToQueen(Move move)
         {
@@ -726,6 +607,7 @@ public List<Move> PossibleMoves
                 {
                     if (row == move.ToRow && col == move.ToCol)
                     {
+                        // Move the piece and update it
                         newBoard[row, col] = board[move.FromRow, move.FromCol].Clone(board[move.FromRow, move.FromCol]);
                         newBoard[row, col].UpdatePiece();
                     }

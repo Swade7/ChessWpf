@@ -58,7 +58,7 @@ namespace ChessWpf.Models.Pieces
         public abstract void UpdatePiece();
 
         // Copy method
-        public abstract Piece Clone();
+        public abstract Piece Clone(Piece piece);
 
     }
 }

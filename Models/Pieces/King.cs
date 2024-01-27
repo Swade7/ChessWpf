@@ -11,19 +11,28 @@ namespace ChessWpf.Models.Pieces
         private const int BOARD_SIZE = 8;
         private bool hasMoved;
 
+        public bool HasMoved
+        {
+            get { return hasMoved; }
+            private set
+            {
+                    hasMoved = value;
+            }
+        }
+
         // Constructor
-        public King(Player player) : base(PieceType.King, player) {
-            hasMoved = false;
+        public King(Player player, bool hasMoved = false) : base(PieceType.King, player) {
+            HasMoved = hasMoved;
         }
 
         // Copy
-        public override Piece Clone()
+        public override Piece Clone(Piece piece)
         {
-            King king = new King(Player)
+            King oldKing = (King)piece;
+            return new King(Player, oldKing.HasMoved)
             {
-                hasMoved = hasMoved
+                //hasMoved = oldKing.HasMoved
             };
-            return king;
         }
 
         public override bool CheckValidMove(Move move, Piece[,] board, Player currentPlayer, Move? lastMove)
@@ -66,8 +75,8 @@ namespace ChessWpf.Models.Pieces
                 if (board[rookRow, rookCol].PieceType == PieceType.Rook &&
                     board[rookRow, rookCol].Player == currentPlayer)
                 {
-                    // Check if the Rook has moved
-                    if (((Rook)board[rookRow, rookCol]).HasMoved)
+                    // Check if the King or Rook has moved
+                    if (hasMoved || ((Rook)board[rookRow, rookCol]).HasMoved)
                     {
                         return false;
                     }
@@ -80,24 +89,27 @@ namespace ChessWpf.Models.Pieces
                         {
                             return false;
                         }
-                    }  
-                }
+                    }
+                    return true;
+                }               
             }
-
-            // Allow the King to only move one space
-            int rowDifference = Math.Abs(move.ToRow - move.FromRow);
-            int colDifference = Math.Abs(move.ToCol - move.FromCol);
-
-            if (rowDifference > 1 || colDifference > 1)
+            else
             {
-                return false;
+                // Allow the King to only move one space
+                int rowDifference = Math.Abs(move.ToRow - move.FromRow);
+                int colDifference = Math.Abs(move.ToCol - move.FromCol);
+
+                if (rowDifference > 1 || colDifference > 1)
+                {
+                    return false;
+                }
             }
 
             return true;
         }
 
         public override void UpdatePiece() {
-            hasMoved = true;
+            HasMoved = true;
         }
     }
 }

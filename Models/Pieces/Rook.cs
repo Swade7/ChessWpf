@@ -29,9 +29,13 @@ namespace ChessWpf.Models.Pieces
         }
 
         // Copy
-        public override Piece Clone()
+        public override Piece Clone(Piece piece)
         {
-            return new Rook(Player);
+            Rook oldRook = (Rook)piece;
+            return new Rook(Player)
+            {
+                hasMoved = oldRook.HasMoved
+            };
         }
 
         public override bool CheckValidMove(Move move, Piece[,] board, Player currentPlayer, Move? lastMove)

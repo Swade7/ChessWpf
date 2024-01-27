@@ -18,12 +18,12 @@ namespace ChessWpf.Models.Pieces
         }
 
         // Copy
-        public override Piece Clone()
+        public override Piece Clone(Piece piece)
         {
-
+            Pawn oldPawn = (Pawn)piece;
             return new Pawn(Player)
             {
-                hasMoved = hasMoved
+                hasMoved = oldPawn.hasMoved
             };
         }
 

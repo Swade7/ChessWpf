@@ -14,7 +14,7 @@ namespace ChessWpf.Models.Pieces
         public Bishop(Player player) : base(PieceType.Bishop, player) { }
 
         // Copy
-        public override Piece Clone()
+        public override Piece Clone(Piece piece)
         {
             return new Bishop(Player);
         }

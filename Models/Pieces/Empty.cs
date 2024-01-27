@@ -19,7 +19,7 @@ namespace ChessWpf.Models.Pieces
         }
 
         // Copy
-        public override Piece Clone()
+        public override Piece Clone(Piece piece)
         {
             return new Empty();
         }

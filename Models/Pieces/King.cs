@@ -76,8 +76,7 @@ namespace ChessWpf.Models.Pieces
                     if (hasMoved || ((Rook)board[rookRow, rookCol]).HasMoved)
                     {
                         return false;
-                    }
-                    
+                    }                  
 
                     // Check if the path is clear
                     for (int i = Math.Min(move.FromCol, move.ToCol) + 1; i < Math.Max(move.FromCol, move.ToCol); i++)

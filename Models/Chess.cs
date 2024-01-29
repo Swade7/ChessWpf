@@ -187,6 +187,19 @@ namespace ChessWpf.Models
                         {
                             if (board[(int)selectedLocation.X, (int)selectedLocation.Y].CheckValidMove(move, Board, CurrentPlayer, LastMove) && !WouldBeCheck(move))
                             {
+                                // Prevent invalid castling moves from being added to the list
+                                if (board[(int)selectedLocation.X, (int)selectedLocation.Y].PieceType == PieceType.King && Math.Abs(move.FromCol - move.ToCol) == 2)
+                                {
+                                    King king = (King)board[(int)selectedLocation.X, (int)selectedLocation.Y];
+                                    if (king.HasMoved)
+                                    {
+                                        continue;
+                                    }
+                                    if (UnderAttack(move.FromRow, move.FromCol))
+                                    {
+                                        continue;
+                                    }
+                                }
                                 moves.Add(move);
                             }
                         }
@@ -464,6 +477,18 @@ namespace ChessWpf.Models
         public bool Check()
         {
             Point kingLocation = (currentPlayer == Player.White) ? WhiteKingLocation : BlackKingLocation;
+
+            // Locate the king
+            for (int row = 0; row < BOARD_SIZE; row++)
+            {
+                for (int col = 0; col < BOARD_SIZE; col++)
+                {
+                    if (board[row, col].PieceType == PieceType.King && board[row, col].Player == currentPlayer)
+                    {
+                        kingLocation = new Point(row, col);
+                    }
+                }
+            }
 
             return UnderAttack((int)kingLocation.X, (int)kingLocation.Y);
         }

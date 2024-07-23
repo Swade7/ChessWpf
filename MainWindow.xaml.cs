@@ -159,8 +159,7 @@ namespace ChessWpf
             {
                 Rectangle rect = GetRectangleAt((int)location.X, (int)location.Y);
                 HighlightRectangle(rect, ((SolidColorBrush)rect.Fill).Color, Colors.Gold);
-            }
-            
+            }         
         }
 
         private void HighlightPossibleMoves()
@@ -263,6 +262,14 @@ namespace ChessWpf
 
         private void newGame_Btn_Click(object sender, RoutedEventArgs e)
         {
+            if (ConfirmNewGame())
+            {
+                StartNewGame();
+            }
+        }
+
+        private void StartNewGame()
+        {
             game = new Chess();
 
             DeselectAllPieces();
@@ -270,6 +277,13 @@ namespace ChessWpf
 
             gameStatus = Status.Active;
             currentPlayerLabel.Content = $"{game.CurrentPlayer}'s turn";
+        }
+
+        private bool ConfirmNewGame()
+        {
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to start a new game?", "New Game", MessageBoxButton.YesNo);
+
+            return result == MessageBoxResult.Yes;
         }
     }
 }

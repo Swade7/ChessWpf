@@ -154,8 +154,13 @@ namespace ChessWpf
 
         private void SelectPiece(Point location)
         {
-            Rectangle rect = GetRectangleAt((int)location.X, (int)location.Y);
-            HighlightRectangle(rect, ((SolidColorBrush)rect.Fill).Color, Colors.Gold);
+            // Check if the location is occupied by a piece belonging to the current player
+            if (game.Board[(int)location.X, (int)location.Y].Player == game.CurrentPlayer)
+            {
+                Rectangle rect = GetRectangleAt((int)location.X, (int)location.Y);
+                HighlightRectangle(rect, ((SolidColorBrush)rect.Fill).Color, Colors.Gold);
+            }
+            
         }
 
         private void HighlightPossibleMoves()

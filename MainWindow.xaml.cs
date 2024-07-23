@@ -285,5 +285,25 @@ namespace ChessWpf
 
             return result == MessageBoxResult.Yes;
         }
+
+        private void quitGame_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            if (ConfirmQuitGame())
+            {
+                QuitGame();
+            }
+        }
+
+        private bool ConfirmQuitGame()
+        {
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to quit the game?", "Quit Game", MessageBoxButton.YesNo);
+
+            return result == MessageBoxResult.Yes;
+        }
+
+        private void QuitGame()
+        {
+            Application.Current.Shutdown();
+        }
     }
 }

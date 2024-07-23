@@ -14,8 +14,9 @@
         <Viewbox Stretch="Uniform">
             <Canvas x:Name="boardCanvas" Width="400" Height="400" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="40"></Canvas>
         </Viewbox>
-        <Button x:Name="newGame_Btn" Content="New Game" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="75" Click="newGame_Btn_Click"/>
-        
-        
+        <Button x:Name="newGame_Btn" Content="New Game" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="75" Margin="0,0,100,0" Click="newGame_Btn_Click"/>
+        <Button x:Name="quitGame_Btn" Content="Quit Game" Width="75" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,-100,0" Click="quitGame_Btn_Click" />
+
+
     </Grid>
 </Window>

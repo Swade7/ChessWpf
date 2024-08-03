@@ -11,7 +11,7 @@ namespace ChessWpf.Models.Pieces
             get { return hasMoved; }
             private set
             {
-                    hasMoved = value;
+                hasMoved = value;
             }
         }
 

@@ -414,11 +414,13 @@ namespace ChessWpf.Models
             return false;
         }
 
+        // Update the lists containing the pieces of each player
         private void UpdatePlayerPieces(Move move)
         {
             List<Point> playerPieces = (currentPlayer == Player.White) ? whitePieces : blackPieces;
             List<Point> opponentPieces = (currentPlayer == Player.White) ? blackPieces : whitePieces;
 
+            // Remove a captured piece from the appropriate list
             if (board[move.ToRow, move.ToCol].Player == Opponent)
             {
                 opponentPieces.Remove(new Point(move.ToRow, move.ToCol));
@@ -432,9 +434,9 @@ namespace ChessWpf.Models
             return board[row, col];
         }
 
+        // Return Status.Active unless the game has ended (return the result)
         public Status UpdateStatus()
-        {
-            
+        {          
             if (IsStalemate())
             {
                 return Status.Stalemate;
@@ -452,7 +454,6 @@ namespace ChessWpf.Models
                 }
             }
             
-
             return Status.Active;
         }
 
@@ -471,7 +472,7 @@ namespace ChessWpf.Models
         {
             Point kingLocation = (currentPlayer == Player.White) ? WhiteKingLocation : BlackKingLocation;
 
-            // Locate the king
+            // Locate the king (Should this be needed?)
             for (int row = 0; row < BOARD_SIZE; row++)
             {
                 for (int col = 0; col < BOARD_SIZE; col++)
@@ -488,7 +489,7 @@ namespace ChessWpf.Models
 
         public bool IsStalemate()
         {
-            return (PossibleMoves.Count == 0 && !Check()) || movesSincePawnMovedOrPieceCaptured > MAX_MOVES_SINCE_PAWN_MOVED_OR_PIECE_CAPTURED;
+            return (PossibleMoves.Count == 0 && !Check()) || movesSincePawnMovedOrPieceCaptured >= MAX_MOVES_SINCE_PAWN_MOVED_OR_PIECE_CAPTURED;
         }
 
         public bool WouldBeCheck(Move move)
@@ -501,6 +502,7 @@ namespace ChessWpf.Models
             return chessCopy.Check();
         }
 
+        // Check if a piece could be captured by the opponent's piece
         public bool UnderAttack(int pieceRow, int pieceCol)
         {
             //System.Diagnostics.Debug.WriteLine("UnderAttack() called");
@@ -563,7 +565,9 @@ namespace ChessWpf.Models
             UpdateBoard(rookMove);
             rook.UpdatePiece();
 
+            // Get the column of the king (3 for White, 5 for Black)
             int kingCol = (rookMove.FromCol == 0) ? 3 : 5;
+            
             // Update the king's location
             UpdateKingLocation(new Point(rookMove.FromRow, kingCol));
         }

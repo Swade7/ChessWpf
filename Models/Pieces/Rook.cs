@@ -4,6 +4,7 @@
     {
         private bool hasMoved = false;
 
+        // Properties
         public bool HasMoved
         {
             get { return hasMoved; }

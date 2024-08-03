@@ -37,17 +37,6 @@
             }
         }
 
-        // Static methods for adding and removing pieces
-        public static void AddToCapturedPieces(PieceType capturedPiece, Player player)
-        {
-            // Implement your logic here
-        }
-
-        public static void RemoveFromPieces(PieceType piece, Player player)
-        {
-            // Implement your logic here
-        }
-
         public abstract bool CheckValidMove(Move move, Piece[,] board, Player currentPlayer, Move? lastMove);
         public abstract void UpdatePiece();
 

@@ -468,6 +468,11 @@ namespace ChessWpf.Models
             return Status.Active;
         }
 
+        public void ResetSelectedLocation()
+        {
+            selectedLocation = new Point(-1, -1);
+        }
+
         // Checks for check/checkmate/stalemate
         public bool Checkmate()
         {

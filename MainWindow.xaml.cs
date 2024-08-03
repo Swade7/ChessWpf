@@ -166,17 +166,23 @@ namespace ChessWpf
                 // Highlight the selected piece
                 Rectangle rect = GetRectangleAt((int)location.X, (int)location.Y);
                 HighlightRectangle(rect, ((SolidColorBrush)rect.Fill).Color, Colors.Gold);
+
+                // Set the selected location to the clicked location
+                game.SelectedLocation = location;
             }         
         }
 
         // Show the possible moves for the selected piece
         private void HighlightPossibleMoves()
         {
-            foreach (Move move in game.PossibleMovesForSelectedPiece)
+            if (game.SelectedLocation != new Point(-1, -1))
             {
-                Rectangle rect = GetRectangleAt(move.ToRow, move.ToCol);
-                HighlightRectangle(rect, ((SolidColorBrush)rect.Fill).Color, Colors.Yellow);
-            }
+                foreach (Move move in game.PossibleMovesForSelectedPiece)
+                {
+                    Rectangle rect = GetRectangleAt(move.ToRow, move.ToCol);
+                    HighlightRectangle(rect, ((SolidColorBrush)rect.Fill).Color, Colors.Yellow);
+                }
+            }           
         }
 
         // Highlight a rectangle with a tint color
@@ -210,7 +216,7 @@ namespace ChessWpf
                 // Update the UI
                 DrawPieces();
 
-                game.SelectedLocation = new Point(-1, -1);
+                game.ResetSelectedLocation();
                 UpdateStatus();
                 DeselectAllPieces();
                 currentPlayerLabel.Content = $"{game.CurrentPlayer}'s turn";
@@ -218,6 +224,7 @@ namespace ChessWpf
                 return true;
             }
 
+            game.ResetSelectedLocation();
             return false;
         }
 
@@ -231,11 +238,8 @@ namespace ChessWpf
             // Either select a piece or move a piece depending on if a piece is already selected
             if (game.SelectedLocation == new Point(-1, -1))
             {
-                game.SelectedLocation = new Point(row, col);
-                System.Diagnostics.Debug.WriteLine("Selected " + game.Board[row, col].Player + game.Board[row, col].GetType().Name + " at row " + row + " col " + col);
-
-                // Highlight the selected piece
-                SelectPiece(game.SelectedLocation);
+                // Select and highlight the piece
+                SelectPiece(new Point(row, col));
                 HighlightPossibleMoves();
             }
             // Move the selected piece if the clicked location is a valid move
@@ -276,7 +280,7 @@ namespace ChessWpf
                     // If the clicked location is not of a piece belonging to the current player, set the selected location to -1, -1
                     else
                     {
-                        game.SelectedLocation = new Point(-1, -1);
+                        game.ResetSelectedLocation();
                     } 
                 }             
             }

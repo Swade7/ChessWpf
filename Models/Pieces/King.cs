@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ChessWpf.Models.Pieces
 {
     public class King : Piece
     {
-        private const int BOARD_SIZE = 8;
         private bool hasMoved;
 
         public bool HasMoved
@@ -25,7 +20,7 @@ namespace ChessWpf.Models.Pieces
             HasMoved = hasMoved;
         }
 
-        // Copy
+        // Copy Constructor
         public override Piece Clone(Piece piece)
         {
             King oldKing = (King)piece;

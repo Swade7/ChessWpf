@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ChessWpf.Models.Pieces
+﻿namespace ChessWpf.Models.Pieces
 {
     public class Empty : Piece
     {
@@ -18,7 +12,7 @@ namespace ChessWpf.Models.Pieces
             get { return instance; }
         }
 
-        // Copy
+        // Copy Constructor
         public override Piece Clone(Piece piece)
         {
             return new Empty();

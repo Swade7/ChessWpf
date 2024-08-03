@@ -1,19 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ChessWpf.Models.Pieces
 {
     public class Knight : Piece
     {
-        private const int BOARD_SIZE = 8;
-
         // Constructor
         public Knight(Player player) : base(PieceType.Knight, player) { }
 
-        // Copy
+        // Copy Constructor
         public override Piece Clone(Piece piece)
         {
             return new Knight(Player);

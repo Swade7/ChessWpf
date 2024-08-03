@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-
-namespace ChessWpf.Models.Pieces
+﻿namespace ChessWpf.Models.Pieces
 { 
-
     public abstract class Piece
     {
+        public const int BOARD_SIZE = 8;
         private PieceType pieceType;
         private Player player;
+
         // Constructor
         public Piece(PieceType pieceType, Player player)
         {

@@ -83,14 +83,8 @@ namespace ChessWpf.Models
         {
             get
             {
-                if (CurrentPlayer == Player.White)
-                {
-                    return Player.Black;
-                }
-                else
-                {
-                    return Player.White;
-                }
+
+                return CurrentPlayer == Player.White ? Player.Black : Player.White;
             }
 
         }
@@ -194,8 +188,7 @@ namespace ChessWpf.Models
                         catch (Exception e)
                         {
                             //Console.WriteLine(e);
-                        }
-                        
+                        }                      
                     }
                 }
 
@@ -211,6 +204,7 @@ namespace ChessWpf.Models
             }
         }
 
+        // Returns the location selected by the user or (-1, -1) if no location is selected
         public Point SelectedLocation
         {
             get {  return selectedLocation; }
@@ -358,6 +352,7 @@ namespace ChessWpf.Models
             selectedLocation = new Point(-1, -1);
         }
 
+        // Attempts to make a move and returns true if the move is valid and false otherwise
         public bool MakeMove(Move move)
         {
             Piece piece = GetPiece(move.FromRow, move.FromCol);
@@ -391,7 +386,8 @@ namespace ChessWpf.Models
                     }
                     
                 }
-                else if (piece.PieceType == PieceType.Pawn && Math.Abs(move.FromCol - move.ToCol) == 2)
+
+                else if (CanEnPassant(move))
                 {
                     EnPassant(move);
                 }
@@ -468,6 +464,7 @@ namespace ChessWpf.Models
             return PossibleMoves.Count == 0 && Check();
         }
 
+        // Check if the current player is in check
         public bool Check()
         {
             Point kingLocation = (currentPlayer == Player.White) ? WhiteKingLocation : BlackKingLocation;
@@ -480,6 +477,7 @@ namespace ChessWpf.Models
                     if (board[row, col].PieceType == PieceType.King && board[row, col].Player == currentPlayer)
                     {
                         kingLocation = new Point(row, col);
+                        break;
                     }
                 }
             }
@@ -505,8 +503,6 @@ namespace ChessWpf.Models
         // Check if a piece could be captured by the opponent's piece
         public bool UnderAttack(int pieceRow, int pieceCol)
         {
-            //System.Diagnostics.Debug.WriteLine("UnderAttack() called");
-
             foreach (Point point in (currentPlayer == Player.White) ? blackPieces : whitePieces)
             {
                 // Create a Move variable for formatting
@@ -528,6 +524,7 @@ namespace ChessWpf.Models
                 }
             }
 
+            // Piece is not under attack
             return false;
         }
 
@@ -553,10 +550,6 @@ namespace ChessWpf.Models
                 rookMove.FromCol = BOARD_SIZE - 1;
                 rookMove.ToCol = move.ToCol - 1;
             }
-            else
-            {
-                return;
-            }
 
             // Get the Rook at the location
             Rook rook = (Rook)GetPiece(rookMove.FromRow, rookMove.FromCol);
@@ -576,12 +569,20 @@ namespace ChessWpf.Models
             // Capture the opposing pawn (set the location to Empty)
             if (currentPlayer == Player.White)
             {
-                board[move.ToRow + 1, move.ToCol] = Empty.Instance;
+                board[move.ToRow - 1, move.ToCol] = Empty.Instance;
             }
             else if (currentPlayer == Player.Black)
             {
-                board[move.ToRow - 1, move.ToCol] = Empty.Instance;
+                board[move.ToRow + 1, move.ToCol] = Empty.Instance;
             }
+        }
+
+        private bool CanEnPassant(Move move)
+        {
+            // Check if the move is a valid en passant move
+            return (board[move.ToRow, move.ToCol].PieceType == PieceType.Empty
+                && board[move.FromRow, move.FromCol].PieceType == PieceType.Pawn
+                && move.FromCol != move.ToCol);
         }
         private void PawnToQueen(Move move)
         {

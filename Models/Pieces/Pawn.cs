@@ -70,7 +70,8 @@ namespace ChessWpf.Models.Pieces
                     else if (lastMove.Value.ToRow != move.FromRow
                         || Math.Abs(move.FromCol - lastMove.Value.ToCol) != 1
                         || Math.Abs(lastMove.Value.FromRow - lastMove.Value.ToRow) != 2
-                        || board[lastMove.Value.ToRow, lastMove.Value.ToCol].PieceType != PieceType.Pawn)
+                        || board[lastMove.Value.ToRow, lastMove.Value.ToCol].PieceType != PieceType.Pawn
+                        || lastMove.Value.ToCol != move.ToCol)
                     {
                         return false;
                     }

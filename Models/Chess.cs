@@ -438,8 +438,9 @@ namespace ChessWpf.Models
                 return Status.Stalemate;
             }
             
-            if (Checkmate())
+            else if (Checkmate())
             {
+                /*
                 if (currentPlayer == Player.White)
                 {
                     return Status.BlackWin;
@@ -448,6 +449,9 @@ namespace ChessWpf.Models
                 {
                     return Status.WhiteWin;
                 }
+                */
+
+                return currentPlayer == Player.White ? Status.BlackWin : Status.WhiteWin;
             }
             
             return Status.Active;

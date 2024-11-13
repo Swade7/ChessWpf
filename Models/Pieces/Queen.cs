@@ -22,15 +22,7 @@ namespace ChessWpf.Models.Pieces
             }
 
             // Get the direction of the move
-            char direction;
-            if (move.FromCol == move.ToCol)
-            {
-                direction = 'v';
-            }
-            else
-            {
-                direction = 'h';
-            }
+            char direction = move.FromCol == move.ToCol ? 'v' : 'h';
 
             // Check if there are pieces in the way
             if (direction == 'v')

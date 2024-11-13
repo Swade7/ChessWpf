@@ -11,12 +11,15 @@
             private set
             {
                 if (hasMoved != true)
+                {
                     hasMoved = value;
+                }
             }
         }
 
         // Constructor
-        public Rook(Player player) : base(PieceType.Rook, player) { 
+        public Rook(Player player) : base(PieceType.Rook, player)
+        { 
             hasMoved = false;
         }
 

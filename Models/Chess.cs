@@ -83,7 +83,6 @@ namespace ChessWpf.Models
         {
             get
             {
-
                 return CurrentPlayer == Player.White ? Player.Black : Player.White;
             }
 
@@ -150,10 +149,8 @@ namespace ChessWpf.Models
         {
             get
             {
-                // Create a list to store the possible moves
                 List<Move> moves = new List<Move>();
 
-                // Iterate over the board to find the Piece that belong to the currentPlayer
                 for (int toRow = 0; toRow < BOARD_SIZE; toRow++)
                 {
                     for (int toCol = 0; toCol < BOARD_SIZE; toCol++)
@@ -185,9 +182,8 @@ namespace ChessWpf.Models
                                 moves.Add(move);
                             }
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
-                            //Console.WriteLine(e);
                         }                      
                     }
                 }
@@ -333,7 +329,7 @@ namespace ChessWpf.Models
                 blackPieces.Add(new Point(BLACK_ROW - 1, col));
             }
 
-            // Initialize the empty places
+            // Initialize the empty tiles
             for (int col = 0; col < BOARD_SIZE; col++)
             {
                 for (int row = WHITE_ROW + 2; row <= BLACK_ROW - 2; row++)
@@ -367,24 +363,24 @@ namespace ChessWpf.Models
                     {
                         return false;
                     }
+
                     // Check if the King would move through check
                     for (int i = Math.Min(move.FromCol, move.ToCol); i < Math.Max(move.FromCol, move.ToCol); i++)
                     {
                         if (UnderAttack(move.FromRow, i))
                         {
-                            Console.WriteLine("UnderAttack returned true in MakeMove");
                             return false;
                         }
                     }
+
                     try
                     {
                         Castle(move);
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         return false;
                     }
-                    
                 }
 
                 else if (CanEnPassant(move))
@@ -430,7 +426,7 @@ namespace ChessWpf.Models
             return board[row, col];
         }
 
-        // Return Status.Active unless the game has ended (return the result)
+        // Returns the current state of the game
         public Status UpdateStatus()
         {          
             if (IsStalemate())
@@ -438,19 +434,15 @@ namespace ChessWpf.Models
                 return Status.Stalemate;
             }
             
-            if (Checkmate())
+            else if (Checkmate())
             {
-                if (currentPlayer == Player.White)
-                {
-                    return Status.BlackWin;
-                }
-                else if (currentPlayer == Player.Black)
-                {
-                    return Status.WhiteWin;
-                }
+                return currentPlayer == Player.White ? Status.BlackWin : Status.WhiteWin;
             }
-            
-            return Status.Active;
+
+            else
+            {
+                return Status.Active;
+            }
         }
 
         public void ResetSelectedLocation()

@@ -122,17 +122,20 @@ namespace ChessWpf
             // If the game is over, display a message box showing the results
             if (gameStatus != Status.Active)
             {
-                if (gameStatus == Status.WhiteWin || gameStatus == Status.BlackWin)
+                switch (gameStatus)
                 {
-                    MessageBox.Show("Checkmate! " + game.Opponent.ToString() + " wins!");
-                }
-                else if (gameStatus == Status.Stalemate)
-                {
-                    MessageBox.Show("Stalemate!");
-                }
-                else if (gameStatus == Status.GameOver)
-                {
-                    MessageBox.Show("Game over!");
+                    case Status.WhiteWin:
+                        currentPlayerLabel.Content = "White wins!";
+                        break;
+                    case Status.BlackWin:
+                        currentPlayerLabel.Content = "Black wins!";
+                        break;
+                    case Status.Stalemate:
+                        currentPlayerLabel.Content = "Stalemate!";
+                        break;
+                    case Status.GameOver:
+                        currentPlayerLabel.Content = "Game over!";
+                        break;
                 }
 
                 // Unregister the event handlers for the rectangles and images
@@ -153,8 +156,7 @@ namespace ChessWpf
         // get a Piece at a specific row and column
         private Rectangle GetRectangleAt(int row, int col)
         {
-            int elementIndex = row * game.BoardSize + col;
-            return boardCanvas.Children.OfType<Rectangle>().ElementAt(elementIndex);
+            return boardCanvas.Children.OfType<Rectangle>().ElementAt(row * game.BoardSize + col);
         }
 
         // Select a Piece if it belongs to the current player
@@ -217,15 +219,17 @@ namespace ChessWpf
                 DrawPieces();
 
                 game.ResetSelectedLocation();
-                UpdateStatus();
                 DeselectAllPieces();
+                UpdateStatus();
                 currentPlayerLabel.Content = $"{game.CurrentPlayer}'s turn";
 
                 return true;
             }
-
-            game.ResetSelectedLocation();
-            return false;
+            else
+            {
+                game.ResetSelectedLocation();
+                return false;
+            }
         }
 
         private void boardCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -245,14 +249,6 @@ namespace ChessWpf
             // Move the selected piece if the clicked location is a valid move
             else
             {
-                System.Diagnostics.Debug.WriteLine(
-                    "Moving " + game.Board[(int)game.SelectedLocation.X, (int)game.SelectedLocation.Y].Player 
-                    + game.Board[(int)game.SelectedLocation.X, (int)game.SelectedLocation.Y].GetType().Name
-                    + " from row " + game.SelectedLocation.X + " col " + game.SelectedLocation.Y
-                    + " to row " + row + " col " + col
-                );
-
-                // Make a new move object with the selected piece and the clicked location
                 Move move = new Move
                 {
                     FromCol = (int)game.SelectedLocation.Y,

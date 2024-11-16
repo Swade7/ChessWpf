@@ -125,16 +125,16 @@ namespace ChessWpf
                 switch (gameStatus)
                 {
                     case Status.WhiteWin:
-                        currentPlayerLabel.Content = "White wins!";
+                        MessageBox.Show("Checkmate! White wins!");
                         break;
                     case Status.BlackWin:
-                        currentPlayerLabel.Content = "Black wins!";
+                        MessageBox.Show("Checkmate! Black wins!");
                         break;
                     case Status.Stalemate:
-                        currentPlayerLabel.Content = "Stalemate!";
+                        MessageBox.Show("Game Over! Stalemate!");
                         break;
                     case Status.GameOver:
-                        currentPlayerLabel.Content = "Game over!";
+                        MessageBox.Show("Game Over!");
                         break;
                 }
 
@@ -156,6 +156,8 @@ namespace ChessWpf
         // get a Piece at a specific row and column
         private Rectangle GetRectangleAt(int row, int col)
         {
+            //int elementIndex = row * game.BoardSize + col;
+            return boardCanvas.Children.OfType<Rectangle>().ElementAt(row * game.BoardSize + col);
             return boardCanvas.Children.OfType<Rectangle>().ElementAt(row * game.BoardSize + col);
         }
 
